@@ -6,7 +6,18 @@ authors = ["mikio kubo"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.9,<3.12"
+jupyterlab = "^4.0.2"
+nbdev = "^2.3.12"
+scipy = "^1.11.1"
+pandas = "^2.0.3"
+networkx = "^3.1"
+prophet = "^1.1.4"
+fastai = "^2.7.12"
+fastapi = "^0.100.0"
+pydantic = "^2.0.2"
+matplotlib = "^3.7.2"
+plotly = "^5.15.0"
 
 
 [build-system]
