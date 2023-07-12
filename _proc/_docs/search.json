@@ -88,7 +88,7 @@
     "href": "11networkx.html",
     "title": "グラフ・ネットワーク解析パッケージ NetworkX",
     "section": "",
-    "text": "#default_exp networkx\n# hide\n# %reload_ext autoreload\n# %autoreload 2\n# %load_ext lab_black\n# hide_input\nfrom IPython.display import Image, YouTubeVideo\n\nYouTubeVideo(\"YrkfcVlr_bA\", width=200, height=150)\n# hide_input\nYouTubeVideo(\"9XMJVu0Y9LY\", width=200, height=150)\nNetwrokX https://networkx.org/ はグラフ・ネットワーク解析のためのパッケージである．\nここでは実務で用いる機能を中心に解説する．\nimport networkx as nx  # networkxパッケージを nx という別名で読み込み\nimport matplotlib.pyplot as plt  # 描画用パッケージの読み込み\n\n# 図の表示用のマジックコマンド\n# export\nimport networkx as nx  # networkxパッケージを nx という別名で読み込み\nimport matplotlib.pyplot as plt  # 描画用パッケージの読み込み"
+    "text": "#default_exp networkx\n# hide\n# %reload_ext autoreload\n# %autoreload 2\n# %load_ext lab_black\n# hide_input\nfrom IPython.display import Image, YouTubeVideo\n\nYouTubeVideo(\"YrkfcVlr_bA\", width=200, height=150)\n# hide_input\nYouTubeVideo(\"9XMJVu0Y9LY\", width=200, height=150)\nNetwrokX https://networkx.org/ はグラフ・ネットワーク解析のためのパッケージである．\nここでは実務で用いる機能を中心に解説する．\nimport networkx as nx  # networkxパッケージを nx という別名で読み込み\nimport matplotlib.pyplot as plt  # 描画用パッケージの読み込み\n\n# 図の表示用のマジックコマンド\n\nModuleNotFoundError: No module named 'matplotlib'\n# export\nimport networkx as nx  # networkxパッケージを nx という別名で読み込み\nimport matplotlib.pyplot as plt  # 描画用パッケージの読み込み"
   },
   {
     "objectID": "11networkx.html#グラフ理論",
