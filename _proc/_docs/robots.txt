@@ -1,0 +1,1 @@
+Sitemap: https://scmopt.github.io/analytics2/sitemap.xml

@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "analytics2"
+  site-url: "https://scmopt.github.io/analytics2"
+  description: ""
+  repo-branch: main
+  repo-url: "https://github.com/scmopt/analytics2"
