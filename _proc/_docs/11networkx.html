@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="グラフ・ネットワークのためのパッケージ NetworkX について解説する．">
+
+<title>analytics2 - グラフ・ネットワーク解析パッケージ NetworkX</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="analytics2 - グラフ・ネットワーク解析パッケージ NetworkX">
+<meta property="og:description" content="グラフ・ネットワークのためのパッケージ NetworkX について解説する．">
+<meta property="og:image" content="https://scmopt.github.io/analytics2/11networkx_files/figure-html/cell-11-output-2.png">
+<meta property="og:site-name" content="analytics2">
+<meta property="og:image:height" content="499">
+<meta property="og:image:width" content="660">
+<meta name="twitter:title" content="analytics2 - グラフ・ネットワーク解析パッケージ NetworkX">
+<meta name="twitter:description" content="グラフ・ネットワークのためのパッケージ NetworkX について解説する．">
+<meta name="twitter:image" content="https://scmopt.github.io/analytics2/11networkx_files/figure-html/cell-11-output-2.png">
+<meta name="twitter:image-height" content="499">
+<meta name="twitter:image-width" content="660">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">analytics2</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools ms-auto">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11networkx.html">グラフ・ネットワーク解析パッケージ NetworkX</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">analytics2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">core</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10forecast.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PyMCによるベイズ推論とProphetによる時系列データの予測</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11networkx.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">グラフ・ネットワーク解析パッケージ NetworkX</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#グラフ理論" id="toc-グラフ理論" class="nav-link active" data-scroll-target="#グラフ理論">グラフ理論</a>
+  <ul class="collapse">
+  <li><a href="#グラフの生成法" id="toc-グラフの生成法" class="nav-link" data-scroll-target="#グラフの生成法">グラフの生成法</a></li>
+  <li><a href="#点と枝の追加方法" id="toc-点と枝の追加方法" class="nav-link" data-scroll-target="#点と枝の追加方法">点と枝の追加方法</a></li>
+  <li><a href="#グラフの情報" id="toc-グラフの情報" class="nav-link" data-scroll-target="#グラフの情報">グラフの情報</a></li>
+  <li><a href="#点枝に属性を付与" id="toc-点枝に属性を付与" class="nav-link" data-scroll-target="#点枝に属性を付与">点，枝に属性を付与</a></li>
+  <li><a href="#一度にたくさん追加" id="toc-一度にたくさん追加" class="nav-link" data-scroll-target="#一度にたくさん追加">一度にたくさん追加</a></li>
+  </ul></li>
+  <li><a href="#グラフの生成と描画" id="toc-グラフの生成と描画" class="nav-link" data-scroll-target="#グラフの生成と描画">グラフの生成と描画</a>
+  <ul class="collapse">
+  <li><a href="#pyvisで動くグラフを描画" id="toc-pyvisで動くグラフを描画" class="nav-link" data-scroll-target="#pyvisで動くグラフを描画">pyvisで動くグラフを描画</a></li>
+  <li><a href="#問題グラフの生成と描画" id="toc-問題グラフの生成と描画" class="nav-link" data-scroll-target="#問題グラフの生成と描画">問題（グラフの生成と描画）</a></li>
+  </ul></li>
+  <li><a href="#点枝の情報" id="toc-点枝の情報" class="nav-link" data-scroll-target="#点枝の情報">点・枝の情報</a>
+  <ul class="collapse">
+  <li><a href="#問題" id="toc-問題" class="nav-link" data-scroll-target="#問題">問題</a></li>
+  </ul></li>
+  <li><a href="#描画の引数とレイアウト" id="toc-描画の引数とレイアウト" class="nav-link" data-scroll-target="#描画の引数とレイアウト">描画の引数とレイアウト</a>
+  <ul class="collapse">
+  <li><a href="#問題-1" id="toc-問題-1" class="nav-link" data-scroll-target="#問題-1">問題</a></li>
+  </ul></li>
+  <li><a href="#グラフに対する基本操作" id="toc-グラフに対する基本操作" class="nav-link" data-scroll-target="#グラフに対する基本操作">グラフに対する基本操作</a>
+  <ul class="collapse">
+  <li><a href="#問題-2" id="toc-問題-2" class="nav-link" data-scroll-target="#問題-2">問題</a></li>
+  </ul></li>
+  <li><a href="#マッチングとeuler閉路" id="toc-マッチングとeuler閉路" class="nav-link" data-scroll-target="#マッチングとeuler閉路">マッチングとEuler閉路</a>
+  <ul class="collapse">
+  <li><a href="#問題マッチングとeuler閉路" id="toc-問題マッチングとeuler閉路" class="nav-link" data-scroll-target="#問題マッチングとeuler閉路">問題（マッチングとEuler閉路）</a></li>
+  </ul></li>
+  <li><a href="#最小木" id="toc-最小木" class="nav-link" data-scroll-target="#最小木">最小木</a>
+  <ul class="collapse">
+  <li><a href="#問題最小木" id="toc-問題最小木" class="nav-link" data-scroll-target="#問題最小木">問題（最小木）</a></li>
+  </ul></li>
+  <li><a href="#最短路" id="toc-最短路" class="nav-link" data-scroll-target="#最短路">最短路</a>
+  <ul class="collapse">
+  <li><a href="#問題-3" id="toc-問題-3" class="nav-link" data-scroll-target="#問題-3">問題</a></li>
+  <li><a href="#問題-4" id="toc-問題-4" class="nav-link" data-scroll-target="#問題-4">問題</a></li>
+  <li><a href="#問題-pert" id="toc-問題-pert" class="nav-link" data-scroll-target="#問題-pert">問題 (PERT)</a></li>
+  </ul></li>
+  <li><a href="#フロー問題" id="toc-フロー問題" class="nav-link" data-scroll-target="#フロー問題">フロー問題</a>
+  <ul class="collapse">
+  <li><a href="#例題最大流問題" id="toc-例題最大流問題" class="nav-link" data-scroll-target="#例題最大流問題">例題：最大流問題</a></li>
+  <li><a href="#例題-割当問題" id="toc-例題-割当問題" class="nav-link" data-scroll-target="#例題-割当問題">例題： 割当問題</a></li>
+  <li><a href="#問題輸送問題" id="toc-問題輸送問題" class="nav-link" data-scroll-target="#問題輸送問題">問題（輸送問題）</a></li>
+  <li><a href="#問題多期間生産計画問題" id="toc-問題多期間生産計画問題" class="nav-link" data-scroll-target="#問題多期間生産計画問題">問題（多期間生産計画問題）</a></li>
+  <li><a href="#問題下限制約" id="toc-問題下限制約" class="nav-link" data-scroll-target="#問題下限制約">問題（下限制約）</a></li>
+  <li><a href="#問題ナプキンのクリーニング-難" id="toc-問題ナプキンのクリーニング-難" class="nav-link" data-scroll-target="#問題ナプキンのクリーニング-難">問題（ナプキンのクリーニング） （難）</a></li>
+  </ul></li>
+  <li><a href="#最大安定集合問題と最大クリーク問題" id="toc-最大安定集合問題と最大クリーク問題" class="nav-link" data-scroll-target="#最大安定集合問題と最大クリーク問題">最大安定集合問題と最大クリーク問題</a>
+  <ul class="collapse">
+  <li><a href="#問題-8-クイーン問題" id="toc-問題-8-クイーン問題" class="nav-link" data-scroll-target="#問題-8-クイーン問題">問題 （<span class="math inline">\(8\)</span>-クイーン問題)</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/scmopt/analytics2/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">グラフ・ネットワーク解析パッケージ NetworkX</h1>
+</div>
+
+<div>
+  <div class="description">
+    グラフ・ネットワークのためのパッケージ NetworkX について解説する．
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#default_exp networkx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hide</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># %reload_ext autoreload</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># %autoreload 2</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># %load_ext lab_black</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hide_input</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image, YouTubeVideo</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>YouTubeVideo(<span class="st">"YrkfcVlr_bA"</span>, width<span class="op">=</span><span class="dv">200</span>, height<span class="op">=</span><span class="dv">150</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+        <iframe width="200" height="150" src="https://www.youtube.com/embed/YrkfcVlr_bA" frameborder="0" allowfullscreen=""></iframe>
+        
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hide_input</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>YouTubeVideo(<span class="st">"9XMJVu0Y9LY"</span>, width<span class="op">=</span><span class="dv">200</span>, height<span class="op">=</span><span class="dv">150</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+        <iframe width="200" height="150" src="https://www.youtube.com/embed/9XMJVu0Y9LY" frameborder="0" allowfullscreen=""></iframe>
+        
+</div>
+</div>
+<p>NetwrokX https://networkx.org/ はグラフ・ネットワーク解析のためのパッケージである．</p>
+<p>ここでは実務で用いる機能を中心に解説する．</p>
+<ul>
+<li>グラフ理論</li>
+<li>グラフの生成と描画</li>
+<li>点・枝の情報</li>
+<li>描画の引数とレイアウト</li>
+<li>グラフに対する基本操作</li>
+<li>マッチングとEuler閉路</li>
+<li>最小木</li>
+<li>最短路</li>
+<li>フロー問題</li>
+<li>最大安定集合問題と最大クリーク問題</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx  <span class="co"># networkxパッケージを nx という別名で読み込み</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt  <span class="co"># 描画用パッケージの読み込み</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 図の表示用のマジックコマンド</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx  <span class="co"># networkxパッケージを nx という別名で読み込み</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt  <span class="co"># 描画用パッケージの読み込み</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="グラフ理論" class="level2">
+<h2 class="anchored" data-anchor-id="グラフ理論">グラフ理論</h2>
+<p>グラフ <span class="math inline">\(G=(V,E)\)</span> とは，点集合 <span class="math inline">\(V\)</span> と枝集合 <span class="math inline">\(E\)</span> から構成される概念である． 点集合の要素を<strong>点</strong>(vertex, node)とよび， <span class="math inline">\(u, v (\in V)\)</span> などの記号で表す． 枝集合の要素を<strong>枝</strong>(edge, arc)とよび， <span class="math inline">\(e (\in E)\)</span> と表す． 2点間に複数の枝がない場合には，両端点 <span class="math inline">\(u,v\)</span> を決めれば一意に枝が定まるので，枝を両端にある点の組として <span class="math inline">\((u,v)\)</span> もしくは <span class="math inline">\(uv\)</span> と表すことができる．</p>
+<p>枝に「向き」をつけたグラフを<strong>有向グラフ</strong>(directed graph, digraph)とよび，有向グラフの枝を<strong>有向枝</strong>(directed edge， arc)とよぶ． 一方，通常の（枝に向きをつけない）グラフであることを強調したいときには，グラフを<strong>無向グラフ</strong>(undirected graph)とよぶ．</p>
+<p><strong>ネットワーク</strong>(network)とは，有向グラフに枝上を流れる「もの」（フロー）を付加した概念である． ネットワーク上の最適化理論は 1950年代にはじまり，その実務的な重要性と理論的な美しさから，急速に発展した分野である．</p>
+<p>NetworkXでは，点をnode，枝をedgeとよんでいる．</p>
+<section id="グラフの生成法" class="level3">
+<h3 class="anchored" data-anchor-id="グラフの生成法">グラフの生成法</h3>
+<p>グラフクラス Graph もしくは有向グラフクラス DiGraph から生成する．</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()     <span class="co">#（無向）グラフ G の生成</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>D <span class="op">=</span> nx.DiGraph()   <span class="co">#有向グラフ D の生成</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()  <span class="co"># （無向）グラフ G の生成</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>G</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;networkx.classes.graph.Graph&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="点と枝の追加方法" class="level3">
+<h3 class="anchored" data-anchor-id="点と枝の追加方法">点と枝の追加方法</h3>
+<ul>
+<li>点の追加</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>G.add_node(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>で，グラフGに点nを追加する． n は不変オブジェクトなら何でも良い．</p>
+<ul>
+<li>枝の追加</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>G.add_edge(u,v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>で，グラフGに枝(u,v)を追加する． 枝を追加すると点は自動的に追加される．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="st">"Tokyo"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Graph with 3 nodes and 1 edges</code></pre>
+</div>
+</div>
+</section>
+<section id="グラフの情報" class="level3">
+<h3 class="anchored" data-anchor-id="グラフの情報">グラフの情報</h3>
+<p>G.nodesで点の情報，G.edgesで枝の情報を得ることができる．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G.nodes)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G.edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['Tokyo', 1, 2]
+[(1, 2)]</code></pre>
+</div>
+</div>
+</section>
+<section id="点枝に属性を付与" class="level3">
+<h3 class="anchored" data-anchor-id="点枝に属性を付与">点，枝に属性を付与</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>G.add_node(n,attr_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>で，第2引数 attr_dict に任意の属性を名前付き引数として付加することもできる．以下に例を示す．</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="dv">1</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="st">"Tokyo"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="dv">5</span>, demand<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="dv">6</span>, product<span class="op">=</span>[<span class="st">"A"</span>,<span class="st">"F"</span>,<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>G.add_edge(u,v,attr_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>で，第3引数attr_dictに任意の属性を名前付き引数として付加することもできる．以下に例を示す．</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="dv">1</span>,<span class="dv">3</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="dv">2</span>,<span class="dv">3</span>, weight<span class="op">=</span><span class="dv">7</span>, capacity<span class="op">=</span><span class="fl">15.0</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="dv">1</span>,<span class="dv">4</span>, cost<span class="op">=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="一度にたくさん追加" class="level3">
+<h3 class="anchored" data-anchor-id="一度にたくさん追加">一度にたくさん追加</h3>
+<ul>
+<li>複数の点を一度に追加</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>G.add_nodes_from(L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>はリストL内の各要素を点としてグラフGに追加する．引数はリストLのかわりに集合，辞書，文字列，グラフオブジェクトなども可能である．</p>
+<ul>
+<li>複数の枝を一度に追加</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>G.add_edges_from(L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>は長さ2のタプル(u,v)を要素としたリストL内の要素を枝(u,v)として追加する． 以下に例を示す．</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>G.add_edges_from([(<span class="dv">1</span>,<span class="dv">2</span>),(<span class="dv">1</span>,<span class="dv">3</span>),(<span class="dv">2</span>,<span class="dv">3</span>),(<span class="dv">1</span>,<span class="dv">4</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>G.add_weighted_edges_from(L)は長さ3のタプル(u,v,w)を要素としたリストL内の要素を， 枝(u,v)ならびに重みを表す属性wとして追加する．重みの属性名の既定値はweightである． 以下に例を示す．</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>G.add_weighted_edges_from([(<span class="st">"s"</span>,<span class="dv">1</span>,<span class="dv">5</span>),(<span class="st">"s"</span>,<span class="dv">2</span>,<span class="dv">8</span>),(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>),(<span class="dv">1</span>,<span class="st">"t"</span>,<span class="dv">8</span>),(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>),(<span class="dv">3</span>,<span class="st">"t"</span>,<span class="dv">6</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="グラフの生成と描画" class="level2">
+<h2 class="anchored" data-anchor-id="グラフの生成と描画">グラフの生成と描画</h2>
+<p>3点からなる<strong>完全グラフ</strong>(complete graph: すべての点の間に枝がある無向グラフ）を生成して，描画する．</p>
+<p>以下の3通りの方法を示す．</p>
+<ul>
+<li><p>一番簡単で単純な方法（これが基本）</p></li>
+<li><p>forループを使う方法（点の数が増えてきたらこれを使う）</p></li>
+<li><p>関数を使って一発</p></li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>G<span class="op">=</span>nx.complete_graph(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>描画は<strong>draw</strong>関数を用いる．引数はグラフのインスタンスである．</p>
+<p>Jupyter環境で <strong>%matplotlib inline</strong> と宣言している場合にはmatplotlibの描画関数 <strong>plt.show()</strong> は省略できる．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()  <span class="co"># グラフのインスタンスを生成</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># 枝を追加</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="dv">1</span>, <span class="dv">3</span>)  <span class="co"># 枝を追加</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="dv">2</span>, <span class="dv">3</span>)  <span class="co"># 枝を追加</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>nx.draw(G)  <span class="co"># グラフを描画</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G.nodes)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G.edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1, 2, 3]
+[(1, 2), (1, 3), (2, 3)]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-11-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()  <span class="co"># グラフのインスタンスを生成</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">&lt;</span> j:  <span class="co"># 無向グラフなので，iより大きいjの場合だけ枝を生成</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>            G.add_edge(i, j)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.complete_graph(<span class="dv">3</span>)  <span class="co"># 完全グラフを生成するcomplete_graph関数を利用</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="pyvisで動くグラフを描画" class="level3">
+<h3 class="anchored" data-anchor-id="pyvisで動くグラフを描画">pyvisで動くグラフを描画</h3>
+<p>pyvisパッケージ (https://pyvis.readthedocs.io/en/latest/index.html) を使うと，動かせるグラフを生成できる．</p>
+<p>Google Colabの場合は，</p>
+<pre><code>!pip install pyvis</code></pre>
+<p>でインストールし，</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyvis.network <span class="im">import</span> Network</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>net <span class="op">=</span> Network()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>とpyvisのグラフ netを生成する．</p>
+<p>Jupyter Notebook (Lab.) の場合には，引数の notebookをTrueにして生成する．</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyvis.network <span class="im">import</span> Network</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>net<span class="op">=</span> Network(notebook<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>NetworkXのグラフはfrom_nxメソッドでpyvisのグラフに変換できる．</p>
+<p>Google Colabの場合には，その場で描画できないので，生成されたグラフ(graph.html)をダウンロードしてからブラウザで開く．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyvis.network <span class="im">import</span> Network</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>net <span class="op">=</span> Network(notebook<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>net.from_nx(G)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>net.show(<span class="st">"graph.html"</span>)  <span class="co"># 画面に出したいときには，この行を生かす</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+        <iframe width="500px" height="500px" src="graph.html" frameborder="0" allowfullscreen=""></iframe>
+        
+</div>
+</div>
+</section>
+<section id="問題グラフの生成と描画" class="level3">
+<h3 class="anchored" data-anchor-id="問題グラフの生成と描画">問題（グラフの生成と描画）</h3>
+<ul>
+<li><p>5点の完全グラフを生成し描画せよ． ここで完全グラフとは，すべての点間に枝がある無向グラフである．</p></li>
+<li><p><span class="math inline">\(3 \times 3\)</span> の格子グラフを生成し，描画せよ． ここで<strong>格子グラフ</strong>(grid graph)とは，2次元平面上に 座標 <span class="math inline">\((i,j) (i=1,2,\ldots,n; j=1,2,\ldots,m)\)</span> をもつように <span class="math inline">\(n m\)</span>個の点を配置し， 座標 <span class="math inline">\((i,j)\)</span> の各点に対して，右の点 <span class="math inline">\((i+1,j)\)</span> もしくは上の点 <span class="math inline">\((i,j+1)\)</span> が存在するなら枝をはることによって得られるグラフであり， grid_2d_graph(n,m)関数で生成できる．</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.complete_graph(5)</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Grid = nx.grid_2d_graph(3,3)</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(Grid)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="点枝の情報" class="level2">
+<h2 class="anchored" data-anchor-id="点枝の情報">点・枝の情報</h2>
+<p>ここでは，点と枝に関する情報にアクセスする方法について述べる．</p>
+<ul>
+<li><p>G.nodesメソッドはグラフGに含まれる点の集合（実際はViewと呼ばれるオブジェクト）を返す．</p></li>
+<li><p>G.nodes[n]は点nの属性の情報を辞書として返す．</p></li>
+<li><p>for n in GはグラフGの点に対する反復を行う．</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>D <span class="op">=</span> nx.DiGraph()</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>D.add_node(<span class="st">"Customer"</span>, demand<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>D.add_node(<span class="st">"Plant"</span>, product<span class="op">=</span>[<span class="st">"A"</span>, <span class="st">"F"</span>, <span class="st">"D"</span>])</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>D.add_edge(<span class="st">"Plant"</span>, <span class="st">"Customer"</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(D.nodes)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(D.nodes[<span class="st">"Customer"</span>], D.nodes[<span class="st">"Plant"</span>])</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> D:</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['Customer', 'Plant']
+{'demand': 500} {'product': ['A', 'F', 'D']}
+Customer
+Plant</code></pre>
+</div>
+</div>
+<ul>
+<li><p>G.edgesメソッドはグラフGに含まれるすべての枝の集合（実際はViewと呼ばれるオブジェクト）を返す．</p></li>
+<li><p>for e in G.edges() でグラフGの枝に対する反復を行うことができる．</p></li>
+<li><p>G.neighbors(u)は点uに隣接する（有向グラフの場合には後続する）点のイテレータを返す．</p></li>
+</ul>
+<p>以下の例では，点 <span class="math inline">\(1\)</span> に隣接する点は <span class="math inline">\(2,3,4\)</span> であり，点 <span class="math inline">\(2\)</span> に隣接する点は <span class="math inline">\(1,3\)</span>， 点<span class="math inline">\(3\)</span>に隣接する点は<span class="math inline">\(1,2\)</span>， 点 <span class="math inline">\(4\)</span> に隣接するのは点 <span class="math inline">\(1\)</span> だけである．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>G.add_edges_from([(<span class="dv">1</span>, <span class="dv">2</span>), (<span class="dv">1</span>, <span class="dv">3</span>), (<span class="dv">2</span>, <span class="dv">3</span>), (<span class="dv">1</span>, <span class="dv">4</span>)])</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> G.neighbors(<span class="dv">1</span>):</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(n)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> G:</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(n, <span class="bu">list</span>(G.neighbors(n)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2
+3
+4
+1 [2, 3, 4]
+2 [1, 3]
+3 [1, 2]
+4 [1]</code></pre>
+</div>
+</div>
+<ul>
+<li>G[u]は点uに隣接する点vをキーとし，枝(u,v)に付加された情報を値とした辞書を返す．</li>
+</ul>
+<p>以下の例では，点1に隣接する点は2,3,4であり，接続する枝の重みはそれぞれ100,200,50である．</p>
+<ul>
+<li>G[u][v]は枝(u,v)に付加された属性の情報を辞書として返す．</li>
+</ul>
+<p>つまり，枝(1,2)の重みは100である．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>G.add_weighted_edges_from([(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">100</span>), (<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">200</span>), (<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">60</span>), (<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">50</span>)])</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G[<span class="dv">1</span>])</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G[<span class="dv">1</span>][<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{2: {'weight': 100}, 3: {'weight': 200}, 4: {'weight': 50}}
+{'weight': 100}</code></pre>
+</div>
+</div>
+<ul>
+<li><p>D.successors(u)は有向グラフDに対する点uの後続点のイテレータを返す．</p></li>
+<li><p>D.predecessors(u)は有向グラフDに対する点uの先行点のイテレータを返す．</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> D.successors(<span class="st">"Plant"</span>):</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Customer</code></pre>
+</div>
+</div>
+<section id="問題" class="level3">
+<h3 class="anchored" data-anchor-id="問題">問題</h3>
+<p><span class="math inline">\(3 \times 3\)</span> の格子グラフを生成し，枝の重みをランダムに設定せよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># import random</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Grid = nx.grid_2d_graph(3,3)</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for (u,v) in Grid.edges():</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     Grid[u][v]["weight"] = random.random()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="描画の引数とレイアウト" class="level2">
+<h2 class="anchored" data-anchor-id="描画の引数とレイアウト">描画の引数とレイアウト</h2>
+<p>関数 <strong>draw</strong> の代表的な引数は以下の通り．</p>
+<ul>
+<li><p>pos：点をキー，座標（<span class="math inline">\(x,y\)</span>のタプル）を値とした辞書を与える．これによって点の座標を指定できる． 省略された場合にはバネ法（後述）によって計算された座標に描画する．</p></li>
+<li><p>with_labels：点の名称の表示の有無を指定できる．既定値はFalse．</p></li>
+<li><p>nodelist：描画する点のリストを指定できる．</p></li>
+<li><p>edgelist：描画する枝のリストを指定できる．</p></li>
+<li><p>node_size：描画する点の大きさを指定できる．既定値は <span class="math inline">\(300\)</span>．</p></li>
+<li><p>node_color：描画する点の色を指定できる．既定値は “r”（赤）．</p></li>
+<li><p>width：描画する枝の幅を指定できる．既定値は <span class="math inline">\(1.0\)</span>．</p></li>
+<li><p>edge_color：描画する枝の色を指定できる．既定値は “k” （黒）．</p></li>
+</ul>
+<p>描画の際の点の位置posを求めるための関数として，以下のものが準備されている．</p>
+<ul>
+<li>spring_layout(G)：隣接する点の間に反発するバネがあると仮定して得られるレイアウト（バネのレイアウト）の座標を返す． これが既定値であるので，引数posを省略して描画した場合には，バネのレイアウトになる．</li>
+<li>circular_layout(G)：点を円上に配置したレイアウト（円上レイアウト）の座標を返す．</li>
+<li>random_layout(G)：点を正方形内にランダムに配置したレイアウト（ランダム・レイアウト）の座標を返す．</li>
+<li>shell_layout(G,nlist)：点を同心円状に配置したレイアウト（同心円レイアウト）の座標を返す． nlistは点のリストのリストであり，各リストは同心円に含まれる点集合を表す．</li>
+<li>spectral_layout(G)：Laplace行列（次数対角行列から隣接行列を減じたもの）の固有値を用いたレイアウト（スペクトル・レイアウト）の座標を返す．</li>
+<li>kamada_kawai_layout(G)：Kamada-Kawaiによる枝の重み（距離）を考慮したレイアウトの座標を返す．</li>
+</ul>
+<p>例として円上レイアウトでグラフを描画する．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>G.add_edges_from([(<span class="dv">1</span>, <span class="dv">2</span>), (<span class="dv">1</span>, <span class="dv">3</span>), (<span class="dv">2</span>, <span class="dv">3</span>), (<span class="dv">1</span>, <span class="dv">4</span>), (<span class="dv">1</span>, <span class="dv">5</span>)])</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.circular_layout(G)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos<span class="op">=</span>pos, edge_color<span class="op">=</span><span class="st">"r"</span>, node_color<span class="op">=</span><span class="st">"y"</span>, with_labels<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-22-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hide</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># net.barnes_hut()</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># net.force_atlas_2based()</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># net.hrepulsion()</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co"># net.repulsion()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hide</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co"># net= Network(notebook=True)</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># net.from_nx(G)</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># net.show("graph.html")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="問題-1" class="level3">
+<h3 class="anchored" data-anchor-id="問題-1">問題</h3>
+<p>以下のグラフ生成から好きなものを3つ生成し，描画せよ．</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.cycle_graph(<span class="dv">6</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.balanced_tree(<span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.complete_graph(<span class="dv">5</span>)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.complete_bipartite_graph(<span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.grid_2d_graph(<span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.hypercube_graph(<span class="dv">4</span>)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.chvatal_graph()</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.cubical_graph()</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.octahedral_graph()</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.dodecahedral_graph()</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.icosahedral_graph()</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.petersen_graph()</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.truncated_cube_graph()</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.truncated_tetrahedron_graph()</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.tutte_graph()</span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.fast_gnp_random_graph(<span class="dv">30</span>, <span class="fl">0.1</span>)</span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.random_geometric_graph(<span class="dv">10</span>, <span class="fl">0.2</span>)</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.bipartite.random_graph(<span class="dv">10</span>, <span class="dv">30</span>, <span class="fl">0.3</span>)</span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.bipartite.gnmk_random_graph(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>また， 各グラフを、円上レイアウト， バネのレイアウト， スペクトル・レイアウトのいずれかを1つずつ選び、描画せよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.cycle_graph(6)</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spring_layout(G)</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=1000,with_labels=True,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.balanced_tree(2,2)</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spring_layout(G)</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=1000,with_labels=True,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.complete_graph(5)</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.circular_layout(G)</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=1000,with_labels=True,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.hypercube_graph(4)</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spring_layout(G)</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.chvatal_graph()</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spring_layout(G)</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.cubical_graph()</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spring_layout(G)</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=1000,with_labels=True,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.octahedral_graph()</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="co"># #pos=nx.spring_layout(G)</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spectral_layout(G)</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.dodecahedral_graph()</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spring_layout(G)</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># #pos=nx.spectral_layout(G)</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.icosahedral_graph()</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co"># #pos=nx.spring_layout(G)</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spectral_layout(G)</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.petersen_graph()</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spring_layout(G)</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co"># #pos=nx.spectral_layout(G)</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.truncated_cube_graph()</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co"># #pos=nx.spring_layout(G)</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spectral_layout(G)</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.truncated_tetrahedron_graph()</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spring_layout(G)</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ###pos=nx.spectral_layout(G)</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.tutte_graph()</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co"># #pos=nx.spring_layout(G)</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.spectral_layout(G)</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="co"># #pos=nx.shell_layout(G,[nodes[5:10],nodes[0:5]])</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos,node_size=100,with_labels=False,node_color="w",edge_color="g",width=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.fast_gnp_random_graph(30,0.1)</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co"># #G=nx.gnm_random_graph(10,18)</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="co"># #G=nx.random_regular_graph(3,10)</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.random_geometric_graph(100,0.2)</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pos=nx.get_node_attributes(G,'pos')</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G,pos=pos)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="グラフに対する基本操作" class="level2">
+<h2 class="anchored" data-anchor-id="グラフに対する基本操作">グラフに対する基本操作</h2>
+<p>ここではグラフに対する基本的な操作を紹介する．</p>
+<ul>
+<li><p>complement(G): <strong>補グラフ</strong>(complement)を返す． ここで補グラフ <span class="math inline">\(G=(V,E)\)</span> のとは，点集合 <span class="math inline">\(V\)</span> をもち，<span class="math inline">\((u,v) \not\in E\)</span> のときに <span class="math inline">\(u,v\)</span> 間に枝をはったグラフである．</p></li>
+<li><p>reverse(G): 有向グラフの枝を逆にしたものを返す．</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>G.add_edges_from([(<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">2</span>), (<span class="dv">0</span>, <span class="dv">3</span>)])</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.spring_layout(G)</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos<span class="op">=</span>pos, edge_color<span class="op">=</span><span class="st">"y"</span>, with_labels<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> nx.complement(G)</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(C.edges())</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>nx.draw(C, pos<span class="op">=</span>pos, edge_color<span class="op">=</span><span class="st">"r"</span>, with_labels<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[(1, 2), (1, 3), (2, 3)]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-40-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li><p>compose(G, H): GとHの<strong>和グラフ</strong>(union graph)を返す．ただしGとHに共通部分があってもよい． ここで<span class="math inline">\(G=(V_1,E_1)\)</span> と <span class="math inline">\(H=(V_2,E_2)\)</span> の和グラフとは， 点集合 <span class="math inline">\(V_1 \cup V_2\)</span> と枝集合 <span class="math inline">\(E_1 \cup E_2\)</span> をもつグラフである．</p></li>
+<li><p>union(G, H): グラフGとHの和グラフを返す． ただしGとHに共通部分があってはいけない（もし，共通部分があった場合には例外を返す）．</p></li>
+<li><p>intersection(G, H): 同じ点集合をもつグラフGとHに対して，両方に含まれている枝から成るグラフ（<strong>交差グラフ</strong>）を返す．</p></li>
+<li><p>difference(G, H): 同じ点集合をもつグラフGとHに対して，Gには含まれているがHには含まれていない枝から成るグラフ（<strong>差グラフ</strong>）を返す．</p></li>
+<li><p>symmetric_difference(G, H): 同じ点集合をもつグラフGとHに対して，GまたはHに含まれており，かつ両者に含まれていない枝から成るグラフ（<strong>対称差グラフ</strong>）を返す．</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>G.add_edges_from([(<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">2</span>), (<span class="dv">0</span>, <span class="dv">3</span>)])</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.spring_layout(G)</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos<span class="op">=</span>pos, edge_color<span class="op">=</span><span class="st">"y"</span>, with_labels<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> nx.cycle_graph(<span class="dv">4</span>)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>nx.draw(H, pos<span class="op">=</span>pos, edge_color<span class="op">=</span><span class="st">"r"</span>, with_labels<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-42-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># C = nx.compose(G,H)</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="co"># C = nx.union(G,H)</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="co"># C = nx.intersection(G,H)</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="co"># C = nx.difference(G,H)</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="co"># C = nx.difference(H,G)</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> nx.symmetric_difference(G, H)</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(C.edges())</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>nx.draw(C, pos<span class="op">=</span>pos, edge_color<span class="op">=</span><span class="st">"g"</span>, with_labels<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[(0, 2), (1, 2), (2, 3)]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-43-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>cartesian_product(G, H): グラフGとHに対する<strong>直積</strong>(Cartesian product)グラフを返す． ここで，グラフ <span class="math inline">\(G=(V_1,E_1)\)</span> と <span class="math inline">\(H=(V_2,E_2)\)</span> の直積グラフとは， 点集合 <span class="math inline">\(V_1 \times V_2 = \{ (v_1,v_2) | v_1 \in V_1, v_2 \in V_2 \}\)</span> （点集合 <span class="math inline">\(V_1,V_2\)</span> の直積）と， 以下を満たす枝集合から構成されるグラフである．</li>
+</ul>
+<p>直積グラフの枝 <span class="math inline">\(((u,x),(v,y))\)</span> が存在 <span class="math inline">\(\Leftrightarrow\)</span> 「<span class="math inline">\(x=y\)</span> かつ <span class="math inline">\((u,v) \in E_1\)</span>」もしくは「<span class="math inline">\(u=v\)</span> かつ <span class="math inline">\((x,y) \in E_2\)</span>」</p>
+<ul>
+<li>lexicographic_product(G, H): グラフGとHに対する<strong>辞書的積</strong>(lexicographic product)グラフを返す． ここで，グラフ <span class="math inline">\(G=(V_1,E_1)\)</span> と <span class="math inline">\(H=(V_2,E_2)\)</span> の辞書的積グラフとは， 点集合 <span class="math inline">\(V_1 \times V_2\)</span> と， 以下を満たす枝集合から構成されるグラフである．</li>
+</ul>
+<p>辞書的積グラフの枝 <span class="math inline">\(((u,x),(v,y))\)</span> が存在 <span class="math inline">\(\Leftrightarrow\)</span> 「<span class="math inline">\((u,v) \in E_1\)</span>」もしくは「<span class="math inline">\(u=v\)</span> かつ <span class="math inline">\((x,y) \in E_2\)</span>」</p>
+<ul>
+<li>tensor_product(G, H): グラフGとHに対する<strong>テンソル積</strong>(tensor product)グラフを返す． ここで，グラフ <span class="math inline">\(G=(V_1,E_1)\)</span> と <span class="math inline">\(H=(V_2,E_2)\)</span> のテンソル積グラフとは， 点集合 <span class="math inline">\(V_1 \times V_2\)</span> と， 以下を満たす枝集合から構成されるグラフである．</li>
+</ul>
+<p>テンソル積グラフの枝 <span class="math inline">\(((u,x),(v,y))\)</span> が存在 <span class="math inline">\(\Leftrightarrow\)</span> 「<span class="math inline">\((u,v) \in E_1\)</span> かつ <span class="math inline">\((x,y) \in E_2\)</span>」</p>
+<ul>
+<li>strong_product(G, H): グラフGとHに対する<strong>強積</strong>(strong product)グラフを返す． ここで，グラフ <span class="math inline">\(G=(V_1,E_1)\)</span> と <span class="math inline">\(H=(V_2,E_2)\)</span> の強積グラフとは， 点集合 <span class="math inline">\(V_1 \times V_2\)</span> と， 以下を満たす枝集合から構成されるグラフである．</li>
+</ul>
+<p>強積グラフの枝 <span class="math inline">\(((u,x),(v,y))\)</span> が存在 <span class="math inline">\(\Leftrightarrow\)</span> 「<span class="math inline">\(((u,x),(v,y))\)</span> が直積グラフの枝もしくはテンソル積グラフの枝」</p>
+<p>以下の例では，グラフ <span class="math inline">\(G\)</span> が商品 <span class="math inline">\(0,1,2\)</span> の関連， グラフ <span class="math inline">\(H\)</span> が店舗 <span class="math inline">\(A,B,C\)</span> 間の競合を表すものとする．</p>
+<p>直積グラフの点は，各店舗で売られている各商品を表しており， 同じ店で販売されている関連する商品，もしくは競合する店で販売されている同じ商品に 対して枝がはられていると解釈できる．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> nx.Graph()</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>G.add_edges_from([(<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">2</span>)])</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>H.add_edges_from([(<span class="st">"A"</span>, <span class="st">"B"</span>), (<span class="st">"A"</span>, <span class="st">"C"</span>)])</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>Product <span class="op">=</span> nx.cartesian_product(G, H)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>nx.draw(Product, with_labels<span class="op">=</span><span class="va">True</span>, node_size<span class="op">=</span><span class="dv">1000</span>, node_color<span class="op">=</span><span class="st">"y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-44-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<section id="問題-2" class="level3">
+<h3 class="anchored" data-anchor-id="問題-2">問題</h3>
+<p>上の例題に対して辞書的積， テンソル積， 強積を計算し，描画せよ． それぞれ，どのような意味を持つか考察せよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.Graph()</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_edges_from([(0,1),(1,2)])</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="co"># H=nx.Graph()</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="co"># H.add_edges_from([('A','B'),('A','C')])</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="co"># #Product = nx.cartesian_product(G,H)</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="co"># #Product = nx.lexicographic_product(G,H)</span></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="co"># #Product = nx.tensor_product(G,H)</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Product = nx.strong_product(G,H)</span></span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a><span class="co"># pos={}</span></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in range(3):</span></span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     for j,item in enumerate(["B","A","C"]):</span></span>
+<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a><span class="co">#         pos[(i,item)]=(i,j)</span></span>
+<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a><span class="co"># #nx.draw(Product,with_labels=True)</span></span>
+<span id="cb70-17"><a href="#cb70-17" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(Product,with_labels=True,pos=pos,</span></span>
+<span id="cb70-18"><a href="#cb70-18" aria-hidden="true" tabindex="-1"></a><span class="co">#         node_color="w",node_size=1500,edge_color="g",width=3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#hide ### 問題　（難）</p>
+<p>3つの工場 <span class="math inline">\(0,1,2\)</span> で自動車を生産することを考える． 工場 <span class="math inline">\(0,1\)</span> は部品工場であり，そこでは部品 <span class="math inline">\(P1, P2, P3\)</span> を製造している． 工場 <span class="math inline">\(2\)</span> は組み立て工場であり，そこでは部品を組み立てて完成品 <span class="math inline">\(P4, P5\)</span> を製造している．</p>
+<p>部品と完成品の関係は，部品展開表とよばれるグラフによって与えられており， <span class="math inline">\(P4\)</span> を製造するためには，部品 <span class="math inline">\(P1, P2\)</span> が1つずつ必要であり， <span class="math inline">\(P5\)</span> を製造するためには，部品 <span class="math inline">\(P2, P3\)</span> が1つずつ必要であるものとする． 工場 <span class="math inline">\(0\)</span> から工場 <span class="math inline">\(2\)</span> への輸送と，工場 <span class="math inline">\(1\)</span> から工場 <span class="math inline">\(2\)</span> への輸送を表すグラフと，部品展開表を表すグラフの テンソル積をとることによって，各工場における製品の製造を点，可能な輸送経路を枝としたグラフを生成せよ．</p>
+</section>
+</section>
+<section id="マッチングとeuler閉路" class="level2">
+<h2 class="anchored" data-anchor-id="マッチングとeuler閉路">マッチングとEuler閉路</h2>
+<p>以下のサイト（もしく本）を参照されたい．</p>
+<ul>
+<li>マッチング： Pythonによる実務で役立つ最適化問題100+ (2) ―割当・施設配置・在庫最適化・巡回セールスマン― 13章</li>
+</ul>
+<p>https://scmopt.github.io/opt100/30matching.html</p>
+<ul>
+<li>Euler閉路： Pythonによる実務で役立つ最適化問題100+ (3) ―配送計画・パッキング・スケジューリング― 24章</li>
+</ul>
+<p>https://scmopt.github.io/opt100/64euler.html</p>
+<section id="問題マッチングとeuler閉路" class="level3">
+<h3 class="anchored" data-anchor-id="問題マッチングとeuler閉路">問題（マッチングとEuler閉路）</h3>
+<p>以下のグラフは奇数の次数をもつ点があるので，Euler閉路（すべての枝をちょうど1回通過する閉路：すべての点の次数が偶数であるのが，Euler閉路をもつための必要十分条件である）をもたない． 奇数の次数をもつ点集合に対して，点間の最短距離を計算し，最小距離のマッチング（点の次数が1以下の部分グラフ)を求めよ． マッチングに含まれる枝をもとのグラフに加えるとEuler閉路をもつようになる（なぜか？理由を考えよ）． マッチングを加えたグラフに対するEuler閉路を求めよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.grid_2d_graph(<span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>nx.draw(G)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-46-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G = nx.grid_2d_graph(3,4)</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="co"># NewG = nx.eulerize(G)</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for (u,v) in nx.eulerian_circuit(NewG):</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     print(u,v)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="最小木" class="level2">
+<h2 class="anchored" data-anchor-id="最小木">最小木</h2>
+<p>最小木問題については，以下のサイト（もしく本）を参照されたい．</p>
+<ul>
+<li>Pythonによる実務で役立つ最適化問題100+ (1) ―グラフ理論と組合せ最適化への招待― 第４章</li>
+</ul>
+<p>https://scmopt.github.io/opt100/05mst.html</p>
+<section id="問題最小木" class="level3">
+<h3 class="anchored" data-anchor-id="問題最小木">問題（最小木）</h3>
+<ol type="1">
+<li><p><span class="math inline">\(5 \times 5\)</span> の格子グラフ（枝の重みはすべて <span class="math inline">\(1\)</span>）の最小木（枝の重みの合計が最小の閉路を含まない連結グラフ）を求めよ．</p></li>
+<li><p><span class="math inline">\(5 \times 5\)</span> の格子グラフの枝の重みをランダムに設定した上で，最小木を求め，最小木に含まれる枝を異なる色で描画せよ．</p></li>
+<li><p>枝上に距離が定義された無向グラフ <span class="math inline">\(G=(V,E)\)</span> を考える． このグラフの点集合 <span class="math inline">\(V\)</span> を <span class="math inline">\(k\)</span>個に分割したとき，分割に含まれる点同士の最短距離を最大化するようにしたい．これは最小木に含まれる枝を距離の大きい順に <span class="math inline">\(k-1\)</span> 本除くことによって得ることができる． ランダムに距離を設定した <span class="math inline">\(5 \times 5\)</span> の格子グラフに対して <span class="math inline">\(k=5\)</span> の分割を求めよ．</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G = nx.grid_2d_graph(5,5)</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="co"># print(list(nx.minimum_spanning_edges(G)))</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="co"># m, n = 5, 5</span></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a><span class="co"># lb, ub = 1, 20</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a><span class="co"># G = nx.grid_2d_graph(m, n)</span></span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i,j) in G.edges():</span></span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     G[i][j]["weight"] = random.randint(lb, ub)</span></span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a><span class="co"># pos ={(i,j):(i,j) for (i,j) in G.nodes() }</span></span>
+<span id="cb73-11"><a href="#cb73-11" aria-hidden="true" tabindex="-1"></a><span class="co"># edges = list(nx.minimum_spanning_edges(G))</span></span>
+<span id="cb73-12"><a href="#cb73-12" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.figure()</span></span>
+<span id="cb73-13"><a href="#cb73-13" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G, pos=pos, node_size=100)</span></span>
+<span id="cb73-14"><a href="#cb73-14" aria-hidden="true" tabindex="-1"></a><span class="co"># edge_labels ={}</span></span>
+<span id="cb73-15"><a href="#cb73-15" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i,j) in G.edges():</span></span>
+<span id="cb73-16"><a href="#cb73-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     edge_labels[i,j] = f"{ G[i][j]['weight'] }"</span></span>
+<span id="cb73-17"><a href="#cb73-17" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)</span></span>
+<span id="cb73-18"><a href="#cb73-18" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G, pos=pos, width=5, edgelist= edges, edge_color ="orange")</span></span>
+<span id="cb73-19"><a href="#cb73-19" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span>
+<span id="cb73-20"><a href="#cb73-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-21"><a href="#cb73-21" aria-hidden="true" tabindex="-1"></a><span class="co"># weight =[ ]</span></span>
+<span id="cb73-22"><a href="#cb73-22" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i,j,w) in edges:</span></span>
+<span id="cb73-23"><a href="#cb73-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     weight.append( (w["weight"], i,j) )</span></span>
+<span id="cb73-24"><a href="#cb73-24" aria-hidden="true" tabindex="-1"></a><span class="co"># weight.sort(reverse=True)</span></span>
+<span id="cb73-25"><a href="#cb73-25" aria-hidden="true" tabindex="-1"></a><span class="co"># G1 = nx.Graph()</span></span>
+<span id="cb73-26"><a href="#cb73-26" aria-hidden="true" tabindex="-1"></a><span class="co"># for (w,i,j) in weight[5:]:</span></span>
+<span id="cb73-27"><a href="#cb73-27" aria-hidden="true" tabindex="-1"></a><span class="co">#     G1.add_edge(i,j)</span></span>
+<span id="cb73-28"><a href="#cb73-28" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G, pos=pos, node_size=100)</span></span>
+<span id="cb73-29"><a href="#cb73-29" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)</span></span>
+<span id="cb73-30"><a href="#cb73-30" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G1, pos=pos, node_size=100, width=10, edge_color="orange")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="最短路" class="level2">
+<h2 class="anchored" data-anchor-id="最短路">最短路</h2>
+<p>最短路問題の詳細については，以下のサイト（もしくは本）を参照されたい．</p>
+<ul>
+<li>Pythonによる実務で役立つ最適化問題100+ (1) ―グラフ理論と組合せ最適化への招待― 第2章</li>
+</ul>
+<p>https://scmopt.github.io/opt100/03sp.html</p>
+<p>簡単な通勤（通学）の例を示そう．</p>
+<p>八千代緑が丘から越中島までの電車による経路を求めたい． 枝ごとの移動時間と移動費用を入力して，最短時間パスと最小費用パスを求めよ． 乗り換えの待ち時間は無視してよいが，徒歩の時間は考慮せよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="st">"八千代緑が丘"</span>, <span class="st">"西船橋"</span>, weight<span class="op">=</span><span class="dv">15</span>, cost<span class="op">=</span><span class="dv">490</span>)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="st">"西船橋"</span>, <span class="st">"門前仲町"</span>, weight<span class="op">=</span><span class="dv">20</span>, cost<span class="op">=</span><span class="dv">230</span>)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="st">"門前仲町"</span>, <span class="st">"越中島"</span>, weight<span class="op">=</span><span class="dv">10</span>, cost<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>G.add_edge(<span class="st">"西船橋"</span>, <span class="st">"越中島"</span>, weight<span class="op">=</span><span class="dv">24</span>, cost<span class="op">=</span><span class="dv">380</span>)</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> nx.dijkstra_path(G, <span class="st">"八千代緑が丘"</span>, <span class="st">"越中島"</span>)</span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"最短時間パス"</span>, path)</span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> nx.dijkstra_path(G, <span class="st">"八千代緑が丘"</span>, <span class="st">"越中島"</span>, weight<span class="op">=</span><span class="st">"cost"</span>)</span>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"最小費用パス"</span>, path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>最短時間パス ['八千代緑が丘', '西船橋', '越中島']
+最小費用パス ['八千代緑が丘', '西船橋', '門前仲町', '越中島']</code></pre>
+</div>
+</div>
+<section id="問題-3" class="level3">
+<h3 class="anchored" data-anchor-id="問題-3">問題</h3>
+<p>自宅から大学（もしくは職場）までの最短時間と最小費用のパスを求めるためのネットワークを作成し，最短時間パスと最小費用パスを求めよ． ただし大学（職場）から徒歩圏の場合は，親戚の家からのパスを求めよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G = nx.Graph()</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_edge("八千代緑が丘", "西船橋", weight=15, cost=490)</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_edge("西船橋", "門前仲町", weight=20, cost=230)</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_edge("門前仲町", "越中島", weight=10, cost=0)</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_edge("西船橋", "越中島", weight=24, cost=380)</span></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a><span class="co"># path = nx.dijkstra_path(G, "八千代緑が丘", "越中島")</span></span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a><span class="co"># print("最短時間パス", path)</span></span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a><span class="co"># path = nx.dijkstra_path(G, "八千代緑が丘", "越中島", weight="cost")</span></span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a><span class="co"># print("最小費用パス", path)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="問題-4" class="level3">
+<h3 class="anchored" data-anchor-id="問題-4">問題</h3>
+<p><span class="math inline">\(3\times 3\)</span> の格子グラフを生成するプログラムを作成し，枝の重みをランダムに設定した上で， 左上の点から右下の点までの最短路を求め，最短路を異なる色で描画せよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co"># m, n = 3, 3</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="co"># lb, ub = 1, 300</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="co"># G = nx.grid_2d_graph(m, n)</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i,j) in G.edges():</span></span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     G[i][j]["weight"] = random.randint(lb, ub)</span></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a><span class="co"># path = nx.dijkstra_path(G, source=(0,0), target=(2,2))</span></span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a><span class="co"># edges =[]</span></span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in range(len(path)-1):</span></span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     edges.append( (path[i],path[i+1]) )</span></span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.figure()</span></span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G, pos=pos, node_size=100)</span></span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a><span class="co"># edge_labels ={}</span></span>
+<span id="cb77-14"><a href="#cb77-14" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i,j) in G.edges():</span></span>
+<span id="cb77-15"><a href="#cb77-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     edge_labels[i,j] = f"{ G[i][j]['weight'] }"</span></span>
+<span id="cb77-16"><a href="#cb77-16" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)</span></span>
+<span id="cb77-17"><a href="#cb77-17" aria-hidden="true" tabindex="-1"></a><span class="co"># nx.draw(G, pos=pos, width=5, edgelist= edges, edge_color ="orange")</span></span>
+<span id="cb77-18"><a href="#cb77-18" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="問題-pert" class="level3">
+<h3 class="anchored" data-anchor-id="問題-pert">問題 (PERT)</h3>
+<p>あなたは航空機会社のコンサルタントだ．あなたの仕事は，着陸した航空機をなるべく早く離陸させるためのスケジュールをたてることだ． 航空機は，再び離陸する前に幾つかの作業をこなさなければならない． まず，乗客と荷物を降ろし，次に機内の掃除をし，最後に新しい乗客を搭乗させ，新しい荷物を積み込む． 当然のことであるが， 乗客を降ろす前に掃除はできず，掃除をした後でないと新しい乗客を入れることはできず， 荷物をすべて降ろし終わった後でないと，新しい荷物は積み込むことができない． また，この航空機会社では， 乗客用のゲートの都合で，荷物を降ろし終わった後でないと新しい乗客を搭乗させることができないのだ．</p>
+<p>作業時間は，乗客降ろし <span class="math inline">\(13\)</span> 分，荷物降ろし <span class="math inline">\(25\)</span> 分，機内清掃 <span class="math inline">\(15\)</span> 分，新しい乗客の搭乗 <span class="math inline">\(27\)</span> 分， 新しい荷物積み込み <span class="math inline">\(22\)</span> 分とする． さて，最短で何分で離陸できるだろうか？ （ヒント： 最短離陸時間を出すにはグラフの最長路を求める必要がある． 枝の重みを負にして最短路を解けば良い． 枝の重みが負なので， Dijkstra法でなくBellman-Ford法を使う）</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co"># duration = {1: 13, 2: 25, 3: 15, 4: 27, 5: 22}</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="co"># G = nx.DiGraph()</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_weighted_edges_from([(0,1,-13),(1,2,-15),(2,3,-27),(0,4,-25),(4,2,0),(4,3,-22)])</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="co"># pred, distance = nx.bellman_ford_predecessor_and_distance(G,source=0)</span></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a><span class="co"># distance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#hide ### 問題 （難）</p>
+<p>Dijkstra法を自分で実装せよ．</p>
+<p>NetworkXパッケージのDijkstra法と自分で作成したDijkstra法を大規模な格子グラフで実験し，計算時間を比較せよ．</p>
+</section>
+</section>
+<section id="フロー問題" class="level2">
+<h2 class="anchored" data-anchor-id="フロー問題">フロー問題</h2>
+<p>以下のサイト（もしく本）を参照されたい．</p>
+<ul>
+<li>最大流問題： Pythonによる実務で役立つ最適化問題100+ (1) ―グラフ理論と組合せ最適化への招待― 第8章</li>
+</ul>
+<p>https://scmopt.github.io/opt100/10maxflow.html</p>
+<ul>
+<li>割当問題： Pythonによる実務で役立つ最適化問題100+ (2) ―割当・施設配置・在庫最適化・巡回セールスマン― 14章</li>
+</ul>
+<p>https://scmopt.github.io/opt100/33ap.html</p>
+<ul>
+<li>最小費用流問題： Pythonによる実務で役立つ最適化問題100+ (1) ―グラフ理論と組合せ最適化への招待― 第7章</li>
+</ul>
+<p>https://scmopt.github.io/opt100/09mcf.html</p>
+<section id="例題最大流問題" class="level3">
+<h3 class="anchored" data-anchor-id="例題最大流問題">例題：最大流問題</h3>
+<p>ランダムな2部グラフを作成し，最大マッチングを<strong>最大流問題</strong>(maximum flow problem)を解くことによって求めよ．</p>
+<p>ここで最大流問題とは，以下に定義される問題である．</p>
+<p><span class="math inline">\(n\)</span> 個の点から構成される点集合 <span class="math inline">\(V\)</span> および <span class="math inline">\(m\)</span> 本の枝から構成される枝集合 <span class="math inline">\(E\)</span>， 有向グラフ <span class="math inline">\(G=(V,E)\)</span>， 枝上に定義される非負の容量関数 <span class="math inline">\(C: E \rightarrow R_+\)</span>， 始点 <span class="math inline">\(s \in V\)</span> および終点 <span class="math inline">\(t \in V\)</span> が与えられたとき， 始点 <span class="math inline">\(s\)</span> から終点 <span class="math inline">\(t\)</span> までの「フロー」で， その量が最大になるものを求めよ．</p>
+<p>ここで<strong>フロー</strong>(flow)とは枝上に定義された実数値関数 <span class="math inline">\(x: E \rightarrow R\)</span> で， 以下の性質を満たすものを指す．</p>
+<ul>
+<li><p>フロー整合条件: <span class="math display">\[
+\sum_{v: vu \in E} x_{vu} - \sum_{v: uv \in E} x_{uv} =0  \ \ \ \forall u \in V \setminus \{s,t\}
+\]</span></p></li>
+<li><p>容量制約と非負制約: <span class="math display">\[
+0 \leq x_{e} \leq C_{e} \ \ \  \forall e \in E
+\]</span></p></li>
+</ul>
+<p>ダミーの始点と終点を追加することによって，最大流問題に帰着する．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ランダムな２部グラフの生成例</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>BG <span class="op">=</span> nx.bipartite.random_graph(<span class="dv">10</span>, <span class="dv">5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>top <span class="op">=</span> nx.bipartite.sets(BG)[<span class="dv">0</span>]</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>other <span class="op">=</span> nx.bipartite.sets(BG)[<span class="dv">1</span>]</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.bipartite_layout(BG, top)</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>nx.draw(BG, pos<span class="op">=</span>pos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-53-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>G.add_nodes_from([<span class="st">"source"</span>,<span class="st">"sink"</span>])</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>G.add_edges_from([ (<span class="st">"source"</span>,j) <span class="cf">for</span> j <span class="kw">in</span> top])</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>G.add_edges_from([ (i, <span class="st">"sink"</span>) <span class="cf">for</span> i <span class="kw">in</span> other])</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>G.add_edges_from(BG.edges())</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i,j) <span class="kw">in</span> G.edges():</span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>    G[i][j][<span class="st">"capacity"</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>value, flow <span class="op">=</span> nx.maximum_flow(G, _s<span class="op">=</span><span class="st">"source"</span>, _t<span class="op">=</span><span class="st">"sink"</span>)</span>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"value="</span>,value)</span>
+<span id="cb80-10"><a href="#cb80-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(flow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>value= 5
+{'source': {0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 1, 6: 1, 7: 1, 8: 0, 9: 1}, 'sink': {}, 0: {11: 0, 13: 0, 14: 0}, 1: {10: 0, 14: 0}, 2: {10: 0, 12: 0, 14: 0}, 3: {11: 0, 13: 1}, 4: {10: 0, 13: 0, 14: 0}, 5: {11: 1}, 6: {10: 0, 12: 1, 14: 0}, 7: {10: 0, 13: 0, 14: 1}, 8: {13: 0}, 9: {10: 1, 11: 0}, 10: {'sink': 1}, 11: {'sink': 1}, 12: {'sink': 1}, 13: {'sink': 1}, 14: {'sink': 1}}</code></pre>
+</div>
+</div>
+</section>
+<section id="例題-割当問題" class="level3">
+<h3 class="anchored" data-anchor-id="例題-割当問題">例題： 割当問題</h3>
+<p>4人の作業員 A,B,C,D を4つの仕事 <span class="math inline">\(0,1,2,3\)</span> を1つずつ割り当てることを考える． 作業員が仕事を割り当てられたときにかかる費用が，以下のようになっているとき，最小費用の割当を求めよ．</p>
+<p><span class="math display">\[
+\begin{array}{ l    l l l l}
+       &amp; 0 &amp; 1 &amp; 2    &amp;3    \\ \hline
+A      &amp; 25 &amp; 20 &amp; 30 &amp; 27  \\
+B      &amp; 17 &amp; 15 &amp; 12 &amp; 16  \\
+C      &amp; 25 &amp; 21 &amp; 23 &amp; 19  \\
+D      &amp; 16 &amp; 26 &amp; 21 &amp; 22  
+\end{array}
+\]</span></p>
+<p>この問題は，<strong>最小費用流問題</strong>(minimum cost flow problem)に帰着できる．</p>
+<p>最小費用流問題は，以下のように定義される問題である．</p>
+<p>有向グラフ <span class="math inline">\(G=(V,E)\)</span>， 枝上に定義される重み（費用）関数 <span class="math inline">\(w: E \rightarrow R\)</span>， 枝上に定義される非負の容量関数 $C: E R_+ { } $， 点上に定義される流出量関数 <span class="math inline">\(b: V \rightarrow R\)</span> が与えられたとき， 「実行可能フロー」で，費用の合計が最小になるものを求めよ． ただし，<span class="math inline">\(\sum_{v \in V} b_v =0\)</span> を満たすものとする．</p>
+<p>作業員を表す点から仕事を表す点へ <span class="math inline">\(1\)</span> 単位のフローを最小費用で流すことによって求解する．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>cost <span class="op">=</span> [[<span class="dv">25</span>,<span class="dv">20</span>,<span class="dv">30</span>,<span class="dv">27</span>],</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">17</span>,<span class="dv">15</span>,<span class="dv">12</span>,<span class="dv">16</span>],</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">25</span>,<span class="dv">21</span>,<span class="dv">23</span>,<span class="dv">19</span>],</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">16</span>,<span class="dv">26</span>,<span class="dv">21</span>,<span class="dv">22</span>]]</span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(cost)</span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a>    G.add_node(i, demand<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb82-9"><a href="#cb82-9" aria-hidden="true" tabindex="-1"></a>    G.add_node(n<span class="op">+</span>i, demand<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb82-10"><a href="#cb82-10" aria-hidden="true" tabindex="-1"></a>G.add_weighted_edges_from([(i,n<span class="op">+</span>j,cost[i][j]) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n)])</span>
+<span id="cb82-11"><a href="#cb82-11" aria-hidden="true" tabindex="-1"></a>val, flow <span class="op">=</span> nx.algorithms.flow.network_simplex(G)</span>
+<span id="cb82-12"><a href="#cb82-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(val,flow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>67 {0: {4: 0, 5: 1, 6: 0, 7: 0}, 4: {}, 1: {4: 0, 5: 0, 6: 1, 7: 0}, 5: {}, 2: {4: 0, 5: 0, 6: 0, 7: 1}, 6: {}, 3: {4: 1, 5: 0, 6: 0, 7: 0}, 7: {}}</code></pre>
+</div>
+</div>
+</section>
+<section id="問題輸送問題" class="level3">
+<h3 class="anchored" data-anchor-id="問題輸送問題">問題（輸送問題）</h3>
+<p>あなたは，スポーツ用品販売チェインのオーナーだ． あなたは，店舗展開をしている5つの顧客 （需要地点）に対して， 3つの自社工場で生産した製品を運ぶ必要がある． 調査の結果， 工場での生産可能量（容量）， 顧客への輸送費用，ならびに各顧客における需要量は， 以下のようになっていることが分かった． さて，どのような輸送経路を選択すれば，総費用が最小になるであろうか？</p>
+<p>顧客の需要量，工場から顧客までの輸送費用，ならびに工場の生産容量： <span class="math display">\[
+\begin{array}{c  c c c c c   c  } \hline
+顧客 &amp; 1  &amp;  2  &amp; 3  &amp; 4 &amp; 5 &amp;  \\  \hline
+需要量   &amp;80 &amp; 270 &amp; 250 &amp; 160 &amp; 180 &amp;   \\ \hline
+工場  &amp;   輸送費用  &amp;   &amp;    &amp;    &amp;  &amp; 容量  \\ \hline
+1      &amp; 4 &amp; 5 &amp; 6 &amp; 8 &amp; 10 &amp;  500 \\
+2      &amp; 6  &amp;4 &amp; 3 &amp; 5 &amp; 8 &amp;  500 \\
+3      &amp; 9  &amp; 7 &amp; 4 &amp; 3 &amp; 4 &amp;  500 \\ \hline
+\end{array}
+\]</span></p>
+<p>（ヒント： 最小費用流問題においては，需要（供給は負の需要とみなす）の合計が <span class="math inline">\(0\)</span> でなくてはいけない． 仮想の点を追加することによって，最小費用流問題に帰着せよ）</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="co"># d = {1:80, 2:270, 3:250 , 4:160, 5:180} # demand</span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="co"># M = {1:500, 2:500, 3:500}              # capacity</span></span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a><span class="co"># c = {(1,1):4,    (1,2):6,    (1,3):9,  # cost</span></span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="co">#      (2,1):5,    (2,2):4,    (2,3):7,</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a><span class="co">#      (3,1):6,    (3,2):3,    (3,3):4,</span></span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a><span class="co">#      (4,1):8,    (4,2):5,    (4,3):3,</span></span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a><span class="co">#      (5,1):10,   (5,2):8,    (5,3):4,</span></span>
+<span id="cb84-9"><a href="#cb84-9" aria-hidden="true" tabindex="-1"></a><span class="co">#      }</span></span>
+<span id="cb84-10"><a href="#cb84-10" aria-hidden="true" tabindex="-1"></a><span class="co"># G = nx.DiGraph()</span></span>
+<span id="cb84-11"><a href="#cb84-11" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in M:</span></span>
+<span id="cb84-12"><a href="#cb84-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_node(f"plant{i}", demand=-M[i])</span></span>
+<span id="cb84-13"><a href="#cb84-13" aria-hidden="true" tabindex="-1"></a><span class="co"># for j in d:</span></span>
+<span id="cb84-14"><a href="#cb84-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_node(f"customer{j}", demand=d[j])</span></span>
+<span id="cb84-15"><a href="#cb84-15" aria-hidden="true" tabindex="-1"></a><span class="co"># total_demand = sum(d[j] for j in d)</span></span>
+<span id="cb84-16"><a href="#cb84-16" aria-hidden="true" tabindex="-1"></a><span class="co"># total_supply = sum(M[i] for i in M)</span></span>
+<span id="cb84-17"><a href="#cb84-17" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_node("dummy", demand = total_supply-total_demand)</span></span>
+<span id="cb84-18"><a href="#cb84-18" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_weighted_edges_from([(f"plant{i}",f"customer{j}",c[j,i]) for i in M for j in d] )</span></span>
+<span id="cb84-19"><a href="#cb84-19" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_weighted_edges_from([ (f"plant{i}","dummy",0) for i in M] )</span></span>
+<span id="cb84-20"><a href="#cb84-20" aria-hidden="true" tabindex="-1"></a><span class="co"># val, flow = nx.algorithms.flow.network_simplex(G)</span></span>
+<span id="cb84-21"><a href="#cb84-21" aria-hidden="true" tabindex="-1"></a><span class="co"># print(val,flow)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="問題多期間生産計画問題" class="level3">
+<h3 class="anchored" data-anchor-id="問題多期間生産計画問題">問題（多期間生産計画問題）</h3>
+<p>1つの製品の生産をしている工場を考える． 在庫費用は1日あたり，1トンあたり1万円とする． いま7日先までの需要が分かっていて，7日分の生産量と在庫量を決定したい． 各日の需要は，以下の表のようになっている． 工場の1日の稼働時間は <span class="math inline">\(8\)</span>時間，製品1トンあたりの製造時間は<span class="math inline">\(1\)</span>時間としたとき， 稼働時間上限を満たした最小費用の生産・在庫量を決定せよ．</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>日</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>需要量</td>
+<td>5</td>
+<td>7</td>
+<td>8</td>
+<td>2</td>
+<td>9</td>
+<td>1</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>demand <span class="op">=</span> [<span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">9</span>, <span class="dv">1</span>, <span class="dv">3</span>]  <span class="co"># 需要量</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="bu">len</span>(demand)  <span class="co"># 計画期間</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">1</span>  <span class="co"># 在庫費用</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>capacity <span class="op">=</span> <span class="dv">8</span>  <span class="co"># 最大稼働時間(=最大生産量；製造時間=1だから)</span></span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(T):</span>
+<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>    G.add_node(<span class="ss">f"period</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>, demand<span class="op">=</span>demand[i])</span>
+<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="st">"dummy"</span>, demand<span class="op">=-</span><span class="bu">sum</span>(demand))</span>
+<span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a>G.add_weighted_edges_from([(<span class="st">"dummy"</span>, <span class="ss">f"period</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>, <span class="dv">0</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(T)])</span>
+<span id="cb85-11"><a href="#cb85-11" aria-hidden="true" tabindex="-1"></a>G.add_weighted_edges_from([(<span class="ss">f"period</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>, <span class="ss">f"period</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>, h) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(T <span class="op">-</span> <span class="dv">1</span>)])</span>
+<span id="cb85-12"><a href="#cb85-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(T):</span>
+<span id="cb85-13"><a href="#cb85-13" aria-hidden="true" tabindex="-1"></a>    G[<span class="st">"dummy"</span>][<span class="ss">f"period</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="st">"capacity"</span>] <span class="op">=</span> capacity</span>
+<span id="cb85-14"><a href="#cb85-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(T <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb85-15"><a href="#cb85-15" aria-hidden="true" tabindex="-1"></a>    G[<span class="ss">f"period</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"period</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>][<span class="st">"capacity"</span>] <span class="op">=</span> <span class="bu">sum</span>(demand)</span>
+<span id="cb85-16"><a href="#cb85-16" aria-hidden="true" tabindex="-1"></a>val, flow <span class="op">=</span> nx.algorithms.flow.network_simplex(G)</span>
+<span id="cb85-17"><a href="#cb85-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(val, flow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1 {'period0': {'period1': 0}, 'period1': {'period2': 0}, 'period2': {'period3': 0}, 'period3': {'period4': 1}, 'period4': {'period5': 0}, 'period5': {'period6': 0}, 'period6': {}, 'dummy': {'period0': 5, 'period1': 7, 'period2': 8, 'period3': 3, 'period4': 8, 'period5': 1, 'period6': 3}}</code></pre>
+</div>
+</div>
+</section>
+<section id="問題下限制約" class="level3">
+<h3 class="anchored" data-anchor-id="問題下限制約">問題（下限制約）</h3>
+<p>以下の図に示す最小費用流問題を考える．枝上の数値は「単位フローあたりの費用(容量)」であり，点 <span class="math inline">\(0\)</span> から点 <span class="math inline">\(4\)</span> に <span class="math inline">\(10\)</span> 単位のものを最小費用で流したい．</p>
+<p>ただし，点2から点3へ向かう枝のフロー量が <span class="math inline">\(4\)</span>以上でなければならないものとする．</p>
+<p>このフロー量の下限制約を取り除くことを考える． 下限 <span class="math inline">\(4\)</span> を超過した量を新たなフロー量として <span class="math inline">\(x'_{23}\)</span> と記す．元のフロー量 <span class="math inline">\(x_{23}\)</span> とは <span class="math inline">\(x_{23}= 4+x'_{23}\)</span> の関係がある． 変数 <span class="math inline">\(x_{23}\)</span> を <span class="math inline">\(x'_{23}\)</span> に置き換えることによって， 点2におけるフロー整合条件から点2の需要量は <span class="math inline">\(4\)</span> 増え， 点3におけるフロー整合条件から点3の需要量は <span class="math inline">\(4\)</span>減る． また，枝<span class="math inline">\((2,3)\)</span> の容量（フロー量上限）は，<span class="math inline">\(1(=5-4)\)</span>に変更される．</p>
+<p>この観察を用いて，下限制約付きの最小費用流を求めよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co">#export</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="dv">0</span>, demand<span class="op">=-</span><span class="dv">10</span>)</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="dv">4</span>, demand<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>capacity <span class="op">=</span> {(<span class="dv">0</span>, <span class="dv">1</span>): <span class="dv">5</span>, (<span class="dv">0</span>, <span class="dv">2</span>): <span class="dv">8</span>, (<span class="dv">1</span>, <span class="dv">4</span>): <span class="dv">8</span>, (<span class="dv">2</span>, <span class="dv">1</span>): <span class="dv">2</span>, (<span class="dv">2</span>, <span class="dv">3</span>): <span class="dv">5</span>, (<span class="dv">3</span>, <span class="dv">4</span>): <span class="dv">6</span>}</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>G.add_weighted_edges_from(</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>    [(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">10</span>), (<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">5</span>), (<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>), (<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>), (<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>)]</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i, j) <span class="kw">in</span> G.edges():</span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>    G[i][j][<span class="st">"capacity"</span>] <span class="op">=</span> capacity[i, j]</span>
+<span id="cb87-11"><a href="#cb87-11" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> {<span class="dv">0</span>: (<span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">1</span>: (<span class="dv">1</span>, <span class="dv">2</span>), <span class="dv">2</span>: (<span class="dv">1</span>, <span class="dv">0</span>), <span class="dv">3</span>: (<span class="dv">2</span>, <span class="dv">0</span>), <span class="dv">4</span>: (<span class="dv">2</span>, <span class="dv">2</span>)}</span>
+<span id="cb87-12"><a href="#cb87-12" aria-hidden="true" tabindex="-1"></a>edge_labels <span class="op">=</span> {}</span>
+<span id="cb87-13"><a href="#cb87-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i, j) <span class="kw">in</span> G.edges():</span>
+<span id="cb87-14"><a href="#cb87-14" aria-hidden="true" tabindex="-1"></a>    edge_labels[i, j] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span> G[i][j][<span class="st">'weight'</span>] <span class="sc">}</span><span class="ss">(</span><span class="sc">{</span> G[i][j][<span class="st">'capacity'</span>]<span class="sc">}</span><span class="ss">)"</span></span>
+<span id="cb87-15"><a href="#cb87-15" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb87-16"><a href="#cb87-16" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos<span class="op">=</span>pos, with_labels<span class="op">=</span><span class="va">True</span>, node_size<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb87-17"><a href="#cb87-17" aria-hidden="true" tabindex="-1"></a>nx.draw_networkx_edge_labels(G, pos, edge_labels<span class="op">=</span>edge_labels)</span>
+<span id="cb87-18"><a href="#cb87-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="11networkx_files/figure-html/cell-58-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="問題ナプキンのクリーニング-難" class="level3">
+<h3 class="anchored" data-anchor-id="問題ナプキンのクリーニング-難">問題（ナプキンのクリーニング） （難）</h3>
+<p>あなたはホテルの宴会係だ．あなたは1週間に使用するナプキンを手配する必要がある． 各日の綺麗なナプキンの需要量は平日は <span class="math inline">\(100\)</span>枚，土曜日と日曜日は <span class="math inline">\(125\)</span>枚だ． 新しいナプキンを購入するには <span class="math inline">\(100\)</span>円かかる． 使用したナプキンはクリーニング店で洗濯して綺麗なナプキンにすることができるが， 早いクリーニング店だと1日で1枚あたり <span class="math inline">\(30\)</span>円かかり， 遅いクリーニング店だと2日で1枚あたり <span class="math inline">\(10\)</span>円かかる． 月曜の朝のナプキンの在庫が <span class="math inline">\(0\)</span> としたとき，需要を満たす最適なナプキンの購入ならびにクリーニング計画をたてよ．</p>
+<p><strong>ヒント：</strong> この問題は下限付きの最小費用流問題に帰着できる．</p>
+<p>さらに、上のナプキンのクリーニング問題において， 日曜末の在庫を月曜の朝に使うことができると仮定したときの最適なナプキンのクリーニング計画をたてよ．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.DiGraph()</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Demand=[100,100,100,100,100,125,125]</span></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a><span class="co"># U=sum(Demand)</span></span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a><span class="co"># T=len(Demand)</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_edge("t","s")</span></span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a><span class="co"># for t in range(T):</span></span>
+<span id="cb88-9"><a href="#cb88-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_node(("clean",t),demand=Demand[t])</span></span>
+<span id="cb88-10"><a href="#cb88-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_node(("dirty",t),demand=-Demand[t])</span></span>
+<span id="cb88-11"><a href="#cb88-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge("s",("clean",t),weight=10)         #buy new napkins</span></span>
+<span id="cb88-12"><a href="#cb88-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("clean",t),("dirty",t),capacity=U-Demand[t]) #use napkins</span></span>
+<span id="cb88-13"><a href="#cb88-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("dirty",t),"t")         #discard napkins</span></span>
+<span id="cb88-14"><a href="#cb88-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-15"><a href="#cb88-15" aria-hidden="true" tabindex="-1"></a><span class="co"># for t in range(T-1):</span></span>
+<span id="cb88-16"><a href="#cb88-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("clean",t),("clean",t+1)) #invenory of clean napkins</span></span>
+<span id="cb88-17"><a href="#cb88-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("dirty",t),("clean",t+1),weight=3) #clean using fast laundry</span></span>
+<span id="cb88-18"><a href="#cb88-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-19"><a href="#cb88-19" aria-hidden="true" tabindex="-1"></a><span class="co"># for t in range(T-2):</span></span>
+<span id="cb88-20"><a href="#cb88-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("dirty",t),("clean",t+2),weight=1) #clean using slow laundry</span></span>
+<span id="cb88-21"><a href="#cb88-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-22"><a href="#cb88-22" aria-hidden="true" tabindex="-1"></a><span class="co"># cost,flow = nx.network_simplex(G)</span></span>
+<span id="cb88-23"><a href="#cb88-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-24"><a href="#cb88-24" aria-hidden="true" tabindex="-1"></a><span class="co"># print("cost=",cost)</span></span>
+<span id="cb88-25"><a href="#cb88-25" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in G.nodes():</span></span>
+<span id="cb88-26"><a href="#cb88-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     for j in flow[i]:</span></span>
+<span id="cb88-27"><a href="#cb88-27" aria-hidden="true" tabindex="-1"></a><span class="co">#         if flow[i][j]&gt;0:</span></span>
+<span id="cb88-28"><a href="#cb88-28" aria-hidden="true" tabindex="-1"></a><span class="co">#             print(i,j,flow[i][j])</span></span>
+<span id="cb88-29"><a href="#cb88-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-30"><a href="#cb88-30" aria-hidden="true" tabindex="-1"></a><span class="co"># G=nx.DiGraph()</span></span>
+<span id="cb88-31"><a href="#cb88-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-32"><a href="#cb88-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Demand=[100,100,100,100,100,125,125]</span></span>
+<span id="cb88-33"><a href="#cb88-33" aria-hidden="true" tabindex="-1"></a><span class="co"># U=sum(Demand)</span></span>
+<span id="cb88-34"><a href="#cb88-34" aria-hidden="true" tabindex="-1"></a><span class="co"># T=len(Demand)</span></span>
+<span id="cb88-35"><a href="#cb88-35" aria-hidden="true" tabindex="-1"></a><span class="co"># G.add_edge("t","s")</span></span>
+<span id="cb88-36"><a href="#cb88-36" aria-hidden="true" tabindex="-1"></a><span class="co"># for t in range(T):</span></span>
+<span id="cb88-37"><a href="#cb88-37" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_node(("clean",t),demand=Demand[t])</span></span>
+<span id="cb88-38"><a href="#cb88-38" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_node(("dirty",t),demand=-Demand[t])</span></span>
+<span id="cb88-39"><a href="#cb88-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge("s",("clean",t),weight=10)         #buy new napkins</span></span>
+<span id="cb88-40"><a href="#cb88-40" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("clean",t),("dirty",t),capacity=U-Demand[t]) #use napkins</span></span>
+<span id="cb88-41"><a href="#cb88-41" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("dirty",t),"t")         #discard napkins</span></span>
+<span id="cb88-42"><a href="#cb88-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-43"><a href="#cb88-43" aria-hidden="true" tabindex="-1"></a><span class="co"># for t in range(T):</span></span>
+<span id="cb88-44"><a href="#cb88-44" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("clean",t),("clean",(t+1) % T )) #invenory of clean napkins</span></span>
+<span id="cb88-45"><a href="#cb88-45" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("dirty",t),("clean", (t+1)% T ),weight=3) #clean using fast laundry</span></span>
+<span id="cb88-46"><a href="#cb88-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-47"><a href="#cb88-47" aria-hidden="true" tabindex="-1"></a><span class="co"># for t in range(T):</span></span>
+<span id="cb88-48"><a href="#cb88-48" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.add_edge(("dirty",t),("clean",(t+2) % T),weight=1) #clean using slow laundry</span></span>
+<span id="cb88-49"><a href="#cb88-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-50"><a href="#cb88-50" aria-hidden="true" tabindex="-1"></a><span class="co"># cost,flow = nx.network_simplex(G)</span></span>
+<span id="cb88-51"><a href="#cb88-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-52"><a href="#cb88-52" aria-hidden="true" tabindex="-1"></a><span class="co"># print("cost=",cost)</span></span>
+<span id="cb88-53"><a href="#cb88-53" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in G.nodes():</span></span>
+<span id="cb88-54"><a href="#cb88-54" aria-hidden="true" tabindex="-1"></a><span class="co">#     for j in flow[i]:</span></span>
+<span id="cb88-55"><a href="#cb88-55" aria-hidden="true" tabindex="-1"></a><span class="co">#         if flow[i][j]&gt;0:</span></span>
+<span id="cb88-56"><a href="#cb88-56" aria-hidden="true" tabindex="-1"></a><span class="co">#             print(i,j,flow[i][j])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="最大安定集合問題と最大クリーク問題" class="level2">
+<h2 class="anchored" data-anchor-id="最大安定集合問題と最大クリーク問題">最大安定集合問題と最大クリーク問題</h2>
+<p><strong>最大安定集合問題</strong>(maximum stable set problem)は，以下のように定義される問題である．</p>
+<p>点数 <span class="math inline">\(n\)</span> の無向グラフ <span class="math inline">\(G=(V,E)\)</span> が与えられたとき，点の部分集合 <span class="math inline">\(S (\subseteq V)\)</span> は， すべての <span class="math inline">\(S\)</span> 内の点の間に枝がないとき<strong>安定集合</strong>（stable set）とよばれる． 最大安定集合問題とは，集合に含まれる要素数（位数）<span class="math inline">\(|S|\)</span> が最大になる安定集合 <span class="math inline">\(S\)</span> を求める問題である.</p>
+<p>この問題のグラフの補グラフ（枝の有無を反転させたグラフ）を考えると， 以下に定義される<strong>最大クリーク問題</strong>（maximum clique problem）になる．</p>
+<p>無向グラフ <span class="math inline">\(G=(V,E)\)</span> が与えられたとき，点の部分集合 <span class="math inline">\(C (\subseteq V)\)</span>は， <span class="math inline">\(C\)</span> によって導かれた誘導部分グラフが完全グラフになるとき<strong>クリーク</strong>（clique）とよばれる （完全グラフとは，すべての点の間に枝があるグラフである）． 最大クリーク問題とは，位数 <span class="math inline">\(|C|\)</span> が最大になるクリーク <span class="math inline">\(C\)</span> を求める問題である．</p>
+<p>これらの2つの問題は（お互いに簡単な変換によって帰着されるという意味で）同値である．</p>
+<p>最大安定集合問題と最大クリーク問題の詳細については，以下のサイト（もしくは本）を参照されたい．</p>
+<ul>
+<li>Pythonによる実務で役立つ最適化問題100+ (1) ―グラフ理論と組合せ最適化への招待― 第11章</li>
+</ul>
+<p>https://scmopt.github.io/opt100/18clique.html</p>
+<section id="問題-8-クイーン問題" class="level3">
+<h3 class="anchored" data-anchor-id="問題-8-クイーン問題">問題 （<span class="math inline">\(8\)</span>-クイーン問題)</h3>
+<p><span class="math inline">\(8 \times 8\)</span> のチェス盤に <span class="math inline">\(8\)</span>個のクイーンを置くことを考える． チェスのクイーンとは，将棋の飛車と角の両方の動きができる最強の駒である． クイーンがお互いに取り合わないように置く配置を1つ求めよ．</p>
+<p>将棋を知らない人のために言い換えると，<span class="math inline">\(8 \times 8\)</span> のマス目に，同じ行（列）には高々1つのクイーンを置き， 左下（右下）斜めにも高々1つのクイーンを置くような配置を求める問題である （ヒント： 実は，この問題は安定集合問題の特殊形である． グラフは <span class="math inline">\(i\)</span> 行，<span class="math inline">\(j\)</span> 列のマス目を点とみなして，クイーンが取り合うとき点の間に枝をはれば良い）．</p>
+<p>ちなみに斜めでクイーンが取り合うかどうかを判定するのは，<span class="math inline">\(i-j\)</span> が同じ（右下の斜め）か <span class="math inline">\(i+j\)</span> が同じか（左下の斜め）で判定すれば良い．</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> networkx.algorithms <span class="im">import</span> approximation</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">8</span>  <span class="co"># クイーン数</span></span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>        G.add_node((i, j))</span>
+<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n1 <span class="kw">in</span> G.nodes():</span>
+<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n2 <span class="kw">in</span> G.nodes():</span>
+<span id="cb89-11"><a href="#cb89-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n1 <span class="op">==</span> n2:</span>
+<span id="cb89-12"><a href="#cb89-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb89-13"><a href="#cb89-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n1[<span class="dv">0</span>] <span class="op">==</span> n2[<span class="dv">0</span>]:</span>
+<span id="cb89-14"><a href="#cb89-14" aria-hidden="true" tabindex="-1"></a>            G.add_edge(n1, n2)</span>
+<span id="cb89-15"><a href="#cb89-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n1[<span class="dv">1</span>] <span class="op">==</span> n2[<span class="dv">1</span>]:</span>
+<span id="cb89-16"><a href="#cb89-16" aria-hidden="true" tabindex="-1"></a>            G.add_edge(n1, n2)</span>
+<span id="cb89-17"><a href="#cb89-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n1[<span class="dv">0</span>] <span class="op">-</span> n1[<span class="dv">1</span>] <span class="op">==</span> n2[<span class="dv">0</span>] <span class="op">-</span> n2[<span class="dv">1</span>]:</span>
+<span id="cb89-18"><a href="#cb89-18" aria-hidden="true" tabindex="-1"></a>            G.add_edge(n1, n2)</span>
+<span id="cb89-19"><a href="#cb89-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n1[<span class="dv">0</span>] <span class="op">+</span> n1[<span class="dv">1</span>] <span class="op">==</span> n2[<span class="dv">0</span>] <span class="op">+</span> n2[<span class="dv">1</span>]:</span>
+<span id="cb89-20"><a href="#cb89-20" aria-hidden="true" tabindex="-1"></a>            G.add_edge(n1, n2)</span>
+<span id="cb89-21"><a href="#cb89-21" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> approximation.max_clique(nx.complement(G))</span>
+<span id="cb89-22"><a href="#cb89-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{(2, 4), (1, 2), (0, 0), (3, 1), (7, 6), (6, 3), (4, 7)}</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
