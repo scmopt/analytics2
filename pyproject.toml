@@ -21,6 +21,9 @@ plotly = "^5.15.0"
 openai = "^0.27.8"
 python-dotenv = "^1.0.0"
 sentence-transformers = "^2.2.2"
+datasets = "^2.13.1"
+evaluate = "^0.4.0"
+torch = "^2.0.1"
 
 [build-system]
 requires = ["poetry-core"]
