@@ -3,6 +3,6 @@
 # %% auto 0
 __all__ = []
 
-# %% ../nbs/11networkx.ipynb 7
+# %% ../nbs/11networkx.ipynb 6
 import networkx as nx  # networkxパッケージを nx という別名で読み込み
 import matplotlib.pyplot as plt  # 描画用パッケージの読み込み

@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = []
 
-# %% ../nbs/16fastai.ipynb 3
+# %% ../nbs/16fastai.ipynb 2
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from fastai.tabular.all import *

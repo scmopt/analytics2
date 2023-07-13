@@ -2,6 +2,8 @@ website:
   sidebar:
     contents:
       - index.ipynb
-      - 00_core.ipynb
       - 10forecast.ipynb
       - 11networkx.ipynb
+      - 16fastai.ipynb
+      - 30chatgpt.ipynb
+      - graph.html
