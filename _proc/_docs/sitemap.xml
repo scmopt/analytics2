@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://scmopt.github.io/analytics2/index.html</loc>
-    <lastmod>2023-07-12T23:05:16.283Z</lastmod>
+    <lastmod>2023-07-13T00:59:45.194Z</lastmod>
   </url>
   <url>
     <loc>https://scmopt.github.io/analytics2/10forecast.html</loc>
-    <lastmod>2023-07-12T23:05:15.280Z</lastmod>
+    <lastmod>2023-07-13T00:59:41.718Z</lastmod>
   </url>
   <url>
     <loc>https://scmopt.github.io/analytics2/core.html</loc>
@@ -14,6 +14,14 @@
   </url>
   <url>
     <loc>https://scmopt.github.io/analytics2/11networkx.html</loc>
-    <lastmod>2023-07-12T23:05:15.895Z</lastmod>
+    <lastmod>2023-07-13T00:59:45.010Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scmopt.github.io/analytics2/16fastai.html</loc>
+    <lastmod>2023-07-13T00:59:44.439Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scmopt.github.io/analytics2/30chatgpt.html</loc>
+    <lastmod>2023-07-13T00:59:40.341Z</lastmod>
   </url>
 </urlset>
