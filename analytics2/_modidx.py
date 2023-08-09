@@ -7,4 +7,5 @@ d = { 'settings': { 'branch': 'main',
                 'lib_path': 'analytics2'},
   'syms': { 'analytics2.core': {'analytics2.core.foo': ('core.html#foo', 'analytics2/core.py')},
             'analytics2.fastai': {},
-            'analytics2.networkx': {}}}
+            'analytics2.networkx': {},
+            'analytics2.neuralprophetf': {}}}

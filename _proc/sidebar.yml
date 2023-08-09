@@ -7,3 +7,4 @@ website:
       - 17neuralprophet.ipynb
       - 30chatgpt.ipynb
       - graph.html
+      - temp-plot.html
