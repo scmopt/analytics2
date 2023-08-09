@@ -162,6 +162,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./17neuralprophet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NeuralProphetによる時系列データの予測</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./30chatgpt.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ChatGPTを用いたプロンプト・エンジニアリング</span></a>
   </div>
@@ -177,6 +183,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#自然言語処理-nlpnatural-language-processing" id="toc-自然言語処理-nlpnatural-language-processing" class="nav-link active" data-scroll-target="#自然言語処理-nlpnatural-language-processing">自然言語処理 NLP(Natural Language Processing)</a></li>
+  <li><a href="#感情分析" id="toc-感情分析" class="nav-link" data-scroll-target="#感情分析">感情分析</a></li>
+  <li><a href="#ゼロショット分類" id="toc-ゼロショット分類" class="nav-link" data-scroll-target="#ゼロショット分類">ゼロショット分類</a></li>
+  <li><a href="#文章生成" id="toc-文章生成" class="nav-link" data-scroll-target="#文章生成">文章生成</a></li>
+  <li><a href="#空所穴埋め" id="toc-空所穴埋め" class="nav-link" data-scroll-target="#空所穴埋め">空所穴埋め</a></li>
+  <li><a href="#固有表現認識" id="toc-固有表現認識" class="nav-link" data-scroll-target="#固有表現認識">固有表現認識</a></li>
+  <li><a href="#質問応答" id="toc-質問応答" class="nav-link" data-scroll-target="#質問応答">質問応答</a></li>
+  <li><a href="#要約" id="toc-要約" class="nav-link" data-scroll-target="#要約">要約</a></li>
+  <li><a href="#翻訳" id="toc-翻訳" class="nav-link" data-scroll-target="#翻訳">翻訳</a></li>
+  <li><a href="#仕組みの詳細" id="toc-仕組みの詳細" class="nav-link" data-scroll-target="#仕組みの詳細">仕組みの詳細</a>
+  <ul class="collapse">
+  <li><a href="#前処理" id="toc-前処理" class="nav-link" data-scroll-target="#前処理">前処理</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/scmopt/analytics2/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -215,24 +233,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>文章からの情報抽出：質問と文脈が与えられたときの、文脈からの情報に基づいた質問に対する答えの抽出</li>
 <li>文章の変換：ある文章の他の言語への翻訳、文章の要約</li>
 </ul>
-<p>pipelineを使って色々なNLPの処理ができる</p>
+<p>トランスフォーマーを使って色々なNLPの処理ができる。</p>
 <ul>
-<li>zero-shot-classification</li>
-<li>text-generation</li>
-<li>fill-mask</li>
+<li>sentiment-analysis (感情分析)</li>
+<li>zero-shot-classification (ゼロショット分類)</li>
+<li>text-generation (文章生成)</li>
+<li>fill-mask (空所穴埋め)</li>
 <li>ner (named entity recognition) (固有表現認識)</li>
-<li>question-answering</li>
-<li>sentiment-analysis</li>
-<li>summarization</li>
-<li>translation</li>
+<li>question-answering (質問応答)</li>
+<li>summarization (要約)</li>
+<li>translation (翻訳)</li>
 </ul>
+<p>基本的な使い方は簡単であり、<code>pipeline</code>にやりたいことを表す上の文字列を入れて、生成されたインスタンスに文字列を入れるだけである。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="感情分析" class="level2">
+<h2 class="anchored" data-anchor-id="感情分析">感情分析</h2>
+<p>与えられた文章が <code>POSITIVE</code>か<code>NEGATIVE</code>かを返す。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#generator = pipeline(task="automatic-speech-recognition")</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>classifier <span class="op">=</span> pipeline(<span class="st">"sentiment-analysis"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>classifier(<span class="st">"We are very happy to show you the 🤗 Transformers library."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>classifier <span class="op">=</span> pipeline(<span class="st">"sentiment-analysis"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>classifier(<span class="st">"We are very happy to show you the 🤗 Transformers library."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No model was supplied, defaulted to distilbert-base-uncased-finetuned-sst-2-english and revision af0f99b (https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english).
 Using a pipeline without specifying a model name and revision in production is not recommended.</code></pre>
@@ -241,54 +263,102 @@ Using a pipeline without specifying a model name and revision in production is n
 <pre><code>[{'label': 'POSITIVE', 'score': 0.9997795224189758}]</code></pre>
 </div>
 </div>
+</section>
+<section id="ゼロショット分類" class="level2">
+<h2 class="anchored" data-anchor-id="ゼロショット分類">ゼロショット分類</h2>
+<p>例を示すことなく、与えられた文章を分類する。分類したいラベルのリストを、引数 <code>candidate_labels</code>で与える。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> pipeline(<span class="st">"text-generation"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>generator(<span class="st">"In this course, we will teach you how to"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>classifier2 <span class="op">=</span> pipeline(<span class="st">"zero-shot-classification"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>classifier2(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"This is a course about the Transformers library"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    candidate_labels<span class="op">=</span>[<span class="st">"education"</span>, <span class="st">"politics"</span>, <span class="st">"business"</span>],</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No model was supplied, defaulted to facebook/bart-large-mnli and revision c626438 (https://huggingface.co/facebook/bart-large-mnli).
+Using a pipeline without specifying a model name and revision in production is not recommended.</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"334d005d9f4f4ae6908e73db723318c6","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"534398567321495188211bcf8df0bbda","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"9282f2838d304d87ab872fae6dcdc83d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"df5a335b0ff14238be627a973b9b1daa","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"cb73e09867ac437f86385a5c184ff6cd","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"e6f12f066c6c4d448021cdbfdce0a729","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>{'sequence': 'This is a course about the Transformers library',
+ 'labels': ['education', 'business', 'politics'],
+ 'scores': [0.8445950150489807, 0.11197729408740997, 0.0434277318418026]}</code></pre>
+</div>
+</div>
+</section>
+<section id="文章生成" class="level2">
+<h2 class="anchored" data-anchor-id="文章生成">文章生成</h2>
+<p>与えた文章の続きを書く。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> pipeline(<span class="st">"text-generation"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>generator(<span class="st">"In this course, we will teach you how to"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No model was supplied, defaulted to gpt2 and revision 6c0e608 (https://huggingface.co/gpt2).
 Using a pipeline without specifying a model name and revision in production is not recommended.
 Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation.</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<pre><code>[{'generated_text': 'In this course, we will teach you how to make a powerful computer with the latest hardware on your device. We will demonstrate how to easily install and configure an Apple iPod touch computer to operate Microsoft® Windows® and operating systems, as well as provide'}]</code></pre>
+<pre><code>[{'generated_text': 'In this course, we will teach you how to run a database with Nginx and PHP. We first take a look at how to run PHP and Nginx together. Then we will use an example MySQL database to create a database. In the same'}]</code></pre>
 </div>
 </div>
+<p><code>pipeline</code>のモデル引数<code>model</code>で、使用するモデルを指定することもできる。 モデルは、https://huggingface.co/models から適当なものを選択する必要がある。</p>
+<p>また、最大トークン数を<code>max_length</code>、生成する文章の数を<code>num_return_sequences</code>で与えることもできる。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>unmasker <span class="op">=</span> pipeline(<span class="st">"fill-mask"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> pipeline(<span class="st">"text-generation"</span>, model<span class="op">=</span><span class="st">"distilgpt2"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>generator(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"In this course, we will teach you how to"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    max_length<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    num_return_sequences<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation.</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>[{'generated_text': 'In this course, we will teach you how to make mistakes as well as avoid them all because they cost you money, and why it makes good money'},
+ {'generated_text': 'In this course, we will teach you how to understand the best, most effective and most effective ways to perform the work of the American people. These'}]</code></pre>
+</div>
+</div>
+</section>
+<section id="空所穴埋め" class="level2">
+<h2 class="anchored" data-anchor-id="空所穴埋め">空所穴埋め</h2>
+<p>与えた文章内の<code>&lt;mask&gt;</code>の部分に単語で埋めて文章にする。引数<code>top_k</code>で埋める単語数を与えることができる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>unmasker <span class="op">=</span> pipeline(<span class="st">"fill-mask"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No model was supplied, defaulted to distilroberta-base and revision ec58a5b (https://huggingface.co/distilroberta-base).
 Using a pipeline without specifying a model name and revision in production is not recommended.</code></pre>
 </div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"4d9c96f7beb84281b53f60d0b6be9401","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"56d04e99cb644266a16106f8d0438ada","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"55a2b3bd26564c72a763370b0cbd64e1","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"3320758d95a2478c967c0224f404978e","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"1eaab02d22c84eaab6cb453ce03b5256","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>unmasker(<span class="st">"This course will teach you all about &lt;mask&gt; models."</span>, top_k<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>unmasker(<span class="st">"This course will teach you all about &lt;mask&gt; models."</span>, top_k<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>[{'score': 0.1961977630853653,
   'token': 30412,
@@ -300,36 +370,17 @@ Using a pipeline without specifying a model name and revision in production is n
   'sequence': 'This course will teach you all about computational models.'}]</code></pre>
 </div>
 </div>
+</section>
+<section id="固有表現認識" class="level2">
+<h2 class="anchored" data-anchor-id="固有表現認識">固有表現認識</h2>
+<p>固有表現認識 ner (named entity recognition) とは、文章内の 人(PER: persons)、場所（LOC: locations)、組織(ORG: organizations)などを抽出するタスクである。</p>
+<p>引数<code>grouped_entities</code>を<code>True</code>に設定すると固有名詞を結合して出力する。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ner <span class="op">=</span> pipeline(<span class="st">"ner"</span>, grouped_entities<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>ner(<span class="st">"My name is Sylvain and I work at Hugging Face in Brooklyn."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ner <span class="op">=</span> pipeline(<span class="st">"ner"</span>, grouped_entities<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>ner(<span class="st">"My name is Sylvain and I work at Hugging Face in Brooklyn."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No model was supplied, defaulted to dbmdz/bert-large-cased-finetuned-conll03-english and revision f2482bf (https://huggingface.co/dbmdz/bert-large-cased-finetuned-conll03-english).
-Using a pipeline without specifying a model name and revision in production is not recommended.
-/Users/mikiokubo/Library/Caches/pypoetry/virtualenvs/analytics2-0ZiTWol9-py3.9/lib/python3.9/site-packages/transformers/pipelines/token_classification.py:169: UserWarning: `grouped_entities` is deprecated and will be removed in version v5.0.0, defaulted to `aggregation_strategy="simple"` instead.
-  warnings.warn(</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"a798b48d116044a9905c1a539b974fab","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"bcfcb526e09d403dba4129b79b50f258","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"18bf2345d6764e48b6a9a5436afd035f","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"fdfc0b2196ef4a0584e1eb35c7f8b6df","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
+Using a pipeline without specifying a model name and revision in production is not recommended.</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <pre><code>[{'entity_group': 'PER',
@@ -349,14 +400,16 @@ Using a pipeline without specifying a model name and revision in production is n
   'end': 57}]</code></pre>
 </div>
 </div>
+</section>
+<section id="質問応答" class="level2">
+<h2 class="anchored" data-anchor-id="質問応答">質問応答</h2>
+<p>質問を<code>question</code>、文章を<code>context</code>で与えることによって、質問の答えと、その単語の開始位置と終了位置を返す。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>question_answerer <span class="op">=</span> pipeline(<span class="st">"question-answering"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>question_answerer(</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    question<span class="op">=</span><span class="st">"Where do I work?"</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    context<span class="op">=</span><span class="st">"My name is Sylvain and I work at Hugging Face in Brooklyn"</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>question_answerer <span class="op">=</span> pipeline(<span class="st">"question-answering"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>question_answerer(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    question<span class="op">=</span><span class="st">"Where do I work?"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    context<span class="op">=</span><span class="st">"My name is Sylvain and I work at Hugging Face in Brooklyn"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No model was supplied, defaulted to distilbert-base-cased-distilled-squad and revision 626af31 (https://huggingface.co/distilbert-base-cased-distilled-squad).
 Using a pipeline without specifying a model name and revision in production is not recommended.</code></pre>
@@ -390,32 +443,34 @@ Using a pipeline without specifying a model name and revision in production is n
 <pre><code>{'score': 0.6949763894081116, 'start': 33, 'end': 45, 'answer': 'Hugging Face'}</code></pre>
 </div>
 </div>
+</section>
+<section id="要約" class="level2">
+<h2 class="anchored" data-anchor-id="要約">要約</h2>
+<p>文章の要約を返す。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>summarizer <span class="op">=</span> pipeline(<span class="st">"summarization"</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>summarizer(</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="st">    America has changed dramatically during recent years. Not only has the number of </span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="st">    graduates in traditional engineering disciplines such as mechanical, civil, </span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="st">    electrical, chemical, and aeronautical engineering declined, but in most of </span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="st">    the premier American universities engineering curricula now concentrate on </span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="st">    and encourage largely the study of engineering science. As a result, there </span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="st">    are declining offerings in engineering subjects dealing with infrastructure, </span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="st">    the environment, and related issues, and greater concentration on high </span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="st">    technology subjects, largely supporting increasingly complex scientific </span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="st">    developments. While the latter is important, it should not be at the expense </span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="st">    of more traditional engineering.</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="st">    Rapidly developing economies such as China and India, as well as other </span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="st">    industrial countries in Europe and Asia, continue to encourage and advance </span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="st">    the teaching of engineering. Both China and India, respectively, graduate </span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="st">    six and eight times as many traditional engineers as does the United States. </span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="st">    Other industrial countries at minimum maintain their output, while America </span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="st">    suffers an increasingly serious decline in the number of engineering graduates </span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="st">    and a lack of well-educated engineers.</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>summarizer <span class="op">=</span> pipeline(<span class="st">"summarization"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>summarizer(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="st">    America has changed dramatically during recent years. Not only has the number of </span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="st">    graduates in traditional engineering disciplines such as mechanical, civil, </span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="st">    electrical, chemical, and aeronautical engineering declined, but in most of </span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="st">    the premier American universities engineering curricula now concentrate on </span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="st">    and encourage largely the study of engineering science. As a result, there </span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="st">    are declining offerings in engineering subjects dealing with infrastructure, </span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="st">    the environment, and related issues, and greater concentration on high </span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="st">    technology subjects, largely supporting increasingly complex scientific </span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="st">    developments. While the latter is important, it should not be at the expense </span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="st">    of more traditional engineering.</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="st">    Rapidly developing economies such as China and India, as well as other </span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="st">    industrial countries in Europe and Asia, continue to encourage and advance </span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="st">    the teaching of engineering. Both China and India, respectively, graduate </span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="st">    six and eight times as many traditional engineers as does the United States. </span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="st">    Other industrial countries at minimum maintain their output, while America </span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="st">    suffers an increasingly serious decline in the number of engineering graduates </span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="st">    and a lack of well-educated engineers.</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No model was supplied, defaulted to sshleifer/distilbart-cnn-12-6 and revision a4f8f3e (https://huggingface.co/sshleifer/distilbart-cnn-12-6).
 Using a pipeline without specifying a model name and revision in production is not recommended.</code></pre>
@@ -449,11 +504,13 @@ Using a pipeline without specifying a model name and revision in production is n
 <pre><code>[{'summary_text': ' America has changed dramatically during recent years . The number of engineering graduates in the U.S. has declined in traditional engineering disciplines such as mechanical, civil,    electrical, chemical, and aeronautical engineering . Rapidly developing economies such as China and India continue to encourage and advance the teaching of engineering .'}]</code></pre>
 </div>
 </div>
+</section>
+<section id="翻訳" class="level2">
+<h2 class="anchored" data-anchor-id="翻訳">翻訳</h2>
+<p>翻訳した文章を返す。 <code>pipeline</code>のモデル引数<code>model</code>に翻訳をするためのモデルを入れる。 以下の例では、フランス語から英語への翻訳モデルを指定している。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>translator <span class="op">=</span> pipeline(<span class="st">"translation"</span>, model<span class="op">=</span><span class="st">"Helsinki-NLP/opus-mt-fr-en"</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>translator(<span class="st">"Ce cours est produit par Hugging Face."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>translator <span class="op">=</span> pipeline(<span class="st">"translation"</span>, model<span class="op">=</span><span class="st">"Helsinki-NLP/opus-mt-fr-en"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>translator(<span class="st">"Ce cours est produit par Hugging Face."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id":"47f7ae5c9b2049ceb813260240e2ba55","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
@@ -497,26 +554,40 @@ Using a pipeline without specifying a model name and revision in production is n
 <pre><code>[{'translation_text': 'This course is produced by Hugging Face.'}]</code></pre>
 </div>
 </div>
+</section>
+<section id="仕組みの詳細" class="level2">
+<h2 class="anchored" data-anchor-id="仕組みの詳細">仕組みの詳細</h2>
+<p><code>pipeline</code>の中身は、以下の処理に分解される。</p>
+<pre><code>文字列 =&gt; トークナイザー =&gt; モデル　=&gt; 後処理</code></pre>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>checkpoint <span class="op">=</span> <span class="st">"distilbert-base-uncased-finetuned-sst-2-english"</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> AutoTokenizer.from_pretrained(checkpoint)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoModel</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoModelForSequenceClassification</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="前処理" class="level3">
+<h3 class="anchored" data-anchor-id="前処理">前処理</h3>
+<p>まず、入力された文字列をトークン（単語や記号など）に分割し、各トークンを整数に置き換える必要がある。 これには、<code>AutoTokenizer</code> クラスの<code>from_pretrained</code>メソッドを使用する。 引数には、https://huggingface.co/models にあるモデル名 <code>checkpoint</code>を与える。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>checkpoint <span class="op">=</span> <span class="st">"distilbert-base-uncased-finetuned-sst-2-english"</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> AutoTokenizer.from_pretrained(checkpoint)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>tokenizer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pprint(tokenizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
 <pre><code>DistilBertTokenizerFast(name_or_path='distilbert-base-uncased-finetuned-sst-2-english', vocab_size=30522, model_max_length=512, is_fast=True, padding_side='right', truncation_side='right', special_tokens={'unk_token': '[UNK]', 'sep_token': '[SEP]', 'pad_token': '[PAD]', 'cls_token': '[CLS]', 'mask_token': '[MASK]'}, clean_up_tokenization_spaces=True)</code></pre>
 </div>
 </div>
+<p>生成したトークナーザー<code>tokenizer</code>に文字列（のリスト）を与えると、変換された数値情報を含んだ辞書が生成される。 辞書のキーは、どのトークンに注意するかを表す<code>attention_mask</code>と入力を数値に変換した多次元配列を表す <code>input_ids</code> である。</p>
+<p>この際、どの深層学習フレームワークを使うかを表す<code>return_tensors</code>を指定する必要がある。 ここでは、PyTorchを使うので、引数に<code>pt</code>を指定する。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>raw_inputs <span class="op">=</span> [</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"I've been waiting for a HuggingFace course my whole life."</span>,</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"I hate this so much!"</span>,</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>inputs <span class="op">=</span> tokenizer(raw_inputs, padding<span class="op">=</span><span class="va">True</span>, truncation<span class="op">=</span><span class="va">True</span>, return_tensors<span class="op">=</span><span class="st">"pt"</span>)</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>pprint(inputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>raw_inputs <span class="op">=</span> [</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"I've been waiting for a HuggingFace course my whole life."</span>,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"I hate this so much!"</span>,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>inputs <span class="op">=</span> tokenizer(raw_inputs, padding<span class="op">=</span><span class="va">True</span>, truncation<span class="op">=</span><span class="va">True</span>, return_tensors<span class="op">=</span><span class="st">"pt"</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>pprint(inputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]),
@@ -526,11 +597,11 @@ Using a pipeline without specifying a model name and revision in production is n
              0,     0,     0,     0,     0,     0]])}</code></pre>
 </div>
 </div>
+<p>続いてモデルクラスのインスタンスを生成する。 ここでは、<code>AutoModel</code>クラスの<code>from_pretrained</code>メソッドを使用する。</p>
+<p>ここで生成したモデルは、トランスフォーマーの基本部分だけをもち、出力は入力の特徴を抽出した多次元配列（テンソル）である。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoModel</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>checkpoint <span class="op">=</span> <span class="st">"distilbert-base-uncased-finetuned-sst-2-english"</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoModel.from_pretrained(checkpoint)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>checkpoint <span class="op">=</span> <span class="st">"distilbert-base-uncased-finetuned-sst-2-english"</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoModel.from_pretrained(checkpoint)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Some weights of the model checkpoint at distilbert-base-uncased-finetuned-sst-2-english were not used when initializing DistilBertModel: ['classifier.bias', 'pre_classifier.bias', 'pre_classifier.weight', 'classifier.weight']
 - This IS expected if you are initializing DistilBertModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
@@ -538,8 +609,8 @@ Using a pipeline without specifying a model name and revision in production is n
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>pprint(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
 <pre><code>DistilBertModel(
   (embeddings): Embeddings(
     (word_embeddings): Embedding(30522, 768, padding_idx=0)
@@ -571,15 +642,16 @@ Using a pipeline without specifying a model name and revision in production is n
 )</code></pre>
 </div>
 </div>
+<p>トークナイザーで生成した辞書を展開してモデルに入力すると、PyTorchのテンソルが出力されていることが確認できる。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(outputs.last_hidden_state.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(outputs.last_hidden_state.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>torch.Size([2, 16, 768])</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>outputs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>outputs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>BaseModelOutput(last_hidden_state=tensor([[[-0.1798,  0.2333,  0.6321,  ..., -0.3017,  0.5008,  0.1481],
          [ 0.2758,  0.6497,  0.3200,  ..., -0.0760,  0.5136,  0.1329],
@@ -599,40 +671,40 @@ Using a pipeline without specifying a model name and revision in production is n
        grad_fn=&lt;NativeLayerNormBackward0&gt;), hidden_states=None, attentions=None)</code></pre>
 </div>
 </div>
+<p>今度は、実際に感情分析を行うための層を含んだモデルを、 <code>AutoModelForSequenceClassification</code>クラスを用いて生成する。</p>
+<p>出力の<code>logits</code>に保管されているテンソルが得られた数値である。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoModelForSequenceClassification</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>checkpoint <span class="op">=</span> <span class="st">"distilbert-base-uncased-finetuned-sst-2-english"</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> AutoModelForSequenceClassification.from_pretrained(checkpoint)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>outputs2 <span class="op">=</span> model2(<span class="op">**</span>inputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>checkpoint <span class="op">=</span> <span class="st">"distilbert-base-uncased-finetuned-sst-2-english"</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> AutoModelForSequenceClassification.from_pretrained(checkpoint)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>outputs2 <span class="op">=</span> model2(<span class="op">**</span>inputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>outputs2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>outputs2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>SequenceClassifierOutput(loss=None, logits=tensor([[-1.5607,  1.6123],
         [ 4.1692, -3.3464]], grad_fn=&lt;AddmmBackward0&gt;), hidden_states=None, attentions=None)</code></pre>
 </div>
 </div>
+<p>得られたテンソルをソフトマック関数を用いて確率に変換する。これが予測値になる。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> torch.nn.functional.softmax(outputs2.logits, dim<span class="op">=-</span><span class="dv">1</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predictions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> torch.nn.functional.softmax(outputs2.logits, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predictions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tensor([[4.0195e-02, 9.5981e-01],
         [9.9946e-01, 5.4418e-04]], grad_fn=&lt;SoftmaxBackward0&gt;)</code></pre>
 </div>
 </div>
+<p>最初の文の予測値は [0.0402, 0.9598]、2番目の文の予測値は[0.9995, 0.0005]である。 モデルで用いられたラベルを得るには、モデルの<code>id2label</code>属性をみる。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>model2.config.id2label</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>model2.config.id2label</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>{0: 'NEGATIVE', 1: 'POSITIVE'}</code></pre>
 </div>
 </div>
-<p>First sentence: NEGATIVE: 0.0402, POSITIVE: 0.9598</p>
-<p>Second sentence: NEGATIVE: 0.9995, POSITIVE: 0.0005</p>
+<p>したがって、最初の文章は<code>POSITIVE</code>、2番目の文章は<code>NEGATIVE</code>であると判定される。</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

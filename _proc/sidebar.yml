@@ -4,5 +4,6 @@ website:
       - index.ipynb
       - 05transformers.ipynb
       - 16fastai.ipynb
+      - 17neuralprophet.ipynb
       - 30chatgpt.ipynb
       - graph.html
