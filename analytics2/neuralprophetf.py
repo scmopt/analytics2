@@ -21,3 +21,21 @@ import plotly
 # forecast = model.predict(future)
 # model.plot(forecast);
 # #model.plot_components(forecast);
+
+# %% ../nbs/17neuralprophet.ipynb 55
+# sf = data.sf_temps()
+# sf["Date"] = pd.to_datetime(sf.date)
+# sf.rename(columns={"Date":"ds","temp":"y"},inplace=True)
+# model = Prophet().fit(sf)
+# future = model.make_future_dataframe(periods=200, freq=`H`)
+# forecast = model.predict(future)
+# model.plot(forecast);
+
+# %% ../nbs/17neuralprophet.ipynb 85
+# stocks = data.stocks()
+# amzn = stocks[ stocks.symbol == "AMZN"]
+# amzn = amzn.rename(columns={"date":"ds","price":"y"})
+# model = Prophet(changepoint_prior_scale=0.5, changepoint_range=0.95, yearly_seasonality=5).fit(amzn)
+# future = model.make_future_dataframe(periods=200, freq=`D`)
+# forecast = model.predict(future)
+# model.plot(forecast);
