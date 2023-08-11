@@ -7,7 +7,6 @@ __all__ = []
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from fastai.tabular.all import *
-from IPython.display import Image, YouTubeVideo
 
 # %% ../nbs/16fastai.ipynb 87
 # spam = pd.read_csv("http://logopt.com/data/spam.csv")
