@@ -3,11 +3,6 @@
 # %% auto 0
 __all__ = []
 
-# %% ../nbs/16fastai.ipynb 2
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from fastai.tabular.all import *
-
 # %% ../nbs/16fastai.ipynb 87
 # spam = pd.read_csv("http://logopt.com/data/spam.csv")
 # procs = [Categorify, FillMissing, Normalize] #前処理の種類を準備．
