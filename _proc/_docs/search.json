@@ -431,21 +431,21 @@
     "href": "17neuralprophet.html",
     "title": "NeuralProphetによる時系列データの予測",
     "section": "",
-    "text": "NeuralProphet https://neuralprophet.com/ は需要予測のためのパッケージである．\n\n# インストールされていない場合には、以下を生かす。\n# !pip install -U neuralprophet\n# !pip install -U vega_datasets\n# !pip install -U ipywidgets"
+    "text": "NeuralProphet は需要予測のためのパッケージである．\nBayes推論に基づく予測パッケージ prophet と機械（深層）学習の橋渡しのために新たに開発されたもので、深層学習パッケージ PyTorch を用いている。\nvega_datasetsのデータを用いるので，インストールしておく．\n\n# インストールされていない場合には、以下を生かす。\n# !pip install -U neuralprophet\n# !pip install -U vega_datasets\n# !pip install -U ipywidgets"
   },
   {
     "objectID": "17neuralprophet.html#neuralprophetとは",
     "href": "17neuralprophet.html#neuralprophetとは",
     "title": "NeuralProphetによる時系列データの予測",
     "section": "",
-    "text": "NeuralProphet https://neuralprophet.com/ は需要予測のためのパッケージである．\n\n# インストールされていない場合には、以下を生かす。\n# !pip install -U neuralprophet\n# !pip install -U vega_datasets\n# !pip install -U ipywidgets"
+    "text": "NeuralProphet は需要予測のためのパッケージである．\nBayes推論に基づく予測パッケージ prophet と機械（深層）学習の橋渡しのために新たに開発されたもので、深層学習パッケージ PyTorch を用いている。\nvega_datasetsのデータを用いるので，インストールしておく．\n\n# インストールされていない場合には、以下を生かす。\n# !pip install -U neuralprophet\n# !pip install -U vega_datasets\n# !pip install -U ipywidgets"
   },
   {
     "objectID": "17neuralprophet.html#諸パッケージのインポート",
     "href": "17neuralprophet.html#諸パッケージのインポート",
     "title": "NeuralProphetによる時系列データの予測",
     "section": "諸パッケージのインポート",
-    "text": "諸パッケージのインポート\nNeuralProphetで予測するために必要なパッケージをインポートしておく． vega_datasetsのデータを用いるので，インストールしておく．\nhttps://github.com/altair-viz/vega_datasets"
+    "text": "諸パッケージのインポート\nNeuralProphetで予測するために必要なパッケージをインポートしておく．\n\nimport pandas as pd\nfrom neuralprophet import NeuralProphet, set_log_level\n\n# エラー以外はログメッセージを抑制\nset_log_level(\"ERROR\")\n\nfrom vega_datasets import data\nimport plotly.express as px\nimport plotly"
   },
   {
     "objectID": "17neuralprophet.html#neuralprophetの基本",
