@@ -4689,6 +4689,24 @@ files = [
 ]
 
 [[package]]
+name = "timm"
+version = "0.9.11"
+description = "PyTorch Image Models"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "timm-0.9.11-py3-none-any.whl", hash = "sha256:02bba56786633ff46b55ee0ce3b991fa85375556844e500ad18e6b12921dc3da"},
+    {file = "timm-0.9.11.tar.gz", hash = "sha256:728b433eb4cf0bad0c22a037058388fe7c94662f9b9f7d9f5f7dbe627b41c7fc"},
+]
+
+[package.dependencies]
+huggingface-hub = "*"
+pyyaml = "*"
+safetensors = "*"
+torch = ">=1.7"
+torchvision = "*"
+
+[[package]]
 name = "tinycss2"
 version = "1.2.1"
 description = "A tiny CSS parser"
@@ -5422,4 +5440,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9,<3.11"
-content-hash = "8350d16245c2552a62079d1dff49f3824b5bef2b845f474283de4a7055c6718e"
+content-hash = "551b9aa5fe3e47ff8c4e8d2113a3db30149fc6ad1468bfd6764aa5771548ab30"
