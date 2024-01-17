@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://scmopt.github.io/analytics2/index.html</loc>
-    <lastmod>2023-11-16T23:29:03.073Z</lastmod>
+    <lastmod>2024-01-17T01:00:37.017Z</lastmod>
   </url>
   <url>
     <loc>https://scmopt.github.io/analytics2/10forecast.html</loc>
@@ -35,5 +35,9 @@
   <url>
     <loc>https://scmopt.github.io/analytics2/17neuralprophet.html</loc>
     <lastmod>2023-11-30T23:35:15.228Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scmopt.github.io/analytics2/18pydantic.html</loc>
+    <lastmod>2024-01-17T07:11:47.093Z</lastmod>
   </url>
 </urlset>

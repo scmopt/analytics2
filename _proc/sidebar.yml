@@ -5,6 +5,7 @@ website:
       - 05transformers.ipynb
       - 16fastai.ipynb
       - 17neuralprophet.ipynb
+      - 18pydantic.ipynb
       - 30chatgpt.ipynb
       - graph.html
       - temp-plot.html
