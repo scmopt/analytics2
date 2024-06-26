@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = []
 
-# %% ../nbs/16fastai.ipynb 88
+# %% ../nbs/16fastai.ipynb 87
 # spam = pd.read_csv("http://logopt.com/data/spam.csv")
 # procs = [Categorify, FillMissing, Normalize] #前処理の種類を準備．
 # train_idx, valid_idx = train_test_split(range(len(spam)), test_size=0.3) #検証用データのインデックスを準備．
@@ -13,7 +13,7 @@ __all__ = []
 # learn = tabular_learner(dls, metrics=accuracy)
 # learn.fit_one_cycle(30,1e-3)
 
-# %% ../nbs/16fastai.ipynb 91
+# %% ../nbs/16fastai.ipynb 90
 # mashroom = pd.read_csv("http://logopt.com/data/mashroom.csv", dtype = {"shape":"category", "surface":"category", "color":"category"})
 # procs = [Categorify, FillMissing, Normalize] #前処理の種類を準備．
 # train_idx, valid_idx = train_test_split(range(len(mashroom)), test_size=0.3) #検証用データのインデックスを準備．
@@ -24,7 +24,7 @@ __all__ = []
 # learn = tabular_learner(dls, metrics=accuracy)
 # learn.fit_one_cycle(30,1e-3)
 
-# %% ../nbs/16fastai.ipynb 94
+# %% ../nbs/16fastai.ipynb 93
 # titanic = pd.read_csv("http://logopt.com/data/titanic.csv")
 # train_idx, valid_idx = train_test_split(range(len(titanic)), test_size=0.2) #検証用データのインデックスを準備．
 # dep_var = "Survived" #従属変数名
@@ -35,7 +35,7 @@ __all__ = []
 # learn = tabular_learner(dls, metrics=accuracy)
 # learn.fit_one_cycle(30,1e-3)
 
-# %% ../nbs/16fastai.ipynb 97
+# %% ../nbs/16fastai.ipynb 96
 # cancer = pd.read_csv("http://logopt.com/data/cancer.csv", index_col=0)
 # train_idx, valid_idx = train_test_split(range(len(cancer)), test_size=0.2) #検証用データのインデックスを準備．
 # dep_var = "diagnosis" #従属変数名
@@ -44,7 +44,7 @@ __all__ = []
 # learn = tabular_learner(dls, metrics=accuracy)
 # learn.fit_one_cycle(30,1e-3)
 
-# %% ../nbs/16fastai.ipynb 100
+# %% ../nbs/16fastai.ipynb 99
 # occupancy = pd.read_csv("http://logopt.com/data/occupancy.csv")
 # occupancy.drop("datetime", axis=1, inplace=True)
 # procs = [Categorify, FillMissing, Normalize] #前処理の種類を準備．
